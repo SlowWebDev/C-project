@@ -61,7 +61,7 @@
         </div>
         
         <p class="text-center text-xs text-gray-500">
-            © {{ date('Y') }} Admin Panel. All rights reserved.
+            © {{ date('Y') }} Admin Panel by 1slow. All rights reserved.
         </p>
     </div>
 </div>

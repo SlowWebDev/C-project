@@ -9,43 +9,60 @@
     @vite(['resources/css/app.css','resources/css/admin.css', 'resources/js/admin.js'])
 <body class="bg-gray-900">
     <div class="min-h-screen flex">
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="fixed top-4 right-4 z-50 lg:hidden bg-gray-800 text-white p-3 rounded-lg shadow-lg">
+            <i class="fas fa-bars" id="menu-icon"></i>
+        </button>
+
+        <!-- Sidebar Overlay -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden hidden"></div>
+
         <!-- Sidebar -->
-        <aside class="fixed right-0 top-0 w-64 h-full bg-gray-800 border-l border-gray-700">
-    
+        <aside id="sidebar" class="fixed right-0 top-0 w-64 h-full bg-gray-800 border-l border-gray-700 transform translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40">
+            <!-- Header -->
+            <div class="p-4 border-b border-gray-700 lg:hidden">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-white">Admin Panel</h2>
+                    <button id="close-sidebar" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
             <!-- Navigation -->
             <nav class="mt-6 px-4 space-y-2">
                 <a href="{{ route('admin.dashboard') }}" 
-                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors
+                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700
                           {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700 text-white border-r-4 border-blue-500' : '' }}">
-                    <i class="fas fa-home w-6"></i>
+                    <i class="fas fa-home w-6 mr-3"></i>
                     <span>Dashboard</span>
                 </a>
                 
                 <a href="{{ route('admin.projects.index') }}" 
-                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors
+                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700
                           {{ request()->routeIs('admin.projects.*') ? 'bg-gray-700 text-white border-r-4 border-blue-500' : '' }}">
-                    <i class="fas fa-building w-6"></i>
+                    <i class="fas fa-building w-6 mr-3"></i>
                     <span>Projects</span>
                 </a>
                 
                 <a href="{{ route('admin.media.index') }}" 
-                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors
+                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700
                           {{ request()->routeIs('admin.media.*') ? 'bg-gray-700 text-white border-r-4 border-blue-500' : '' }}">
-                    <i class="fas fa-images w-6"></i>
+                    <i class="fas fa-images w-6 mr-3"></i>
                     <span>Media</span>
                 </a>
                 
                 <a href="{{ route('admin.contacts.index') }}" 
-                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors
+                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700
                           {{ request()->routeIs('admin.contacts.*') ? 'bg-gray-700 text-white border-r-4 border-blue-500' : '' }}">
-                    <i class="fas fa-envelope w-6"></i>
+                    <i class="fas fa-envelope w-6 mr-3"></i>
                     <span>Messages</span>
                 </a>
                 
                 <a href="{{ route('admin.careers.index') }}" 
-                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors
+                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700
                           {{ request()->routeIs('admin.careers.*') ? 'bg-gray-700 text-white border-r-4 border-blue-500' : '' }}">
-                    <i class="fas fa-briefcase w-6"></i>
+                    <i class="fas fa-briefcase w-6 mr-3"></i>
                     <span>Careers</span>
                 </a>
             </nav>
@@ -55,17 +72,17 @@
                 <div class="p-4">
                     <div class="flex items-center justify-between text-gray-300">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white flex-shrink-0">
                                 <span class="text-sm font-medium">{{ substr(auth()->user()->name, 0, 1) }}</span>
                             </div>
-                            <div>
+                            <div class="hidden sm:block">
                                 <div class="text-sm font-medium text-white">{{ auth()->user()->name }}</div>
                                 <div class="text-xs text-gray-500">Administrator</div>
                             </div>
                         </div>
                         <form action="{{ route('admin.logout') }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-gray-800">
+                            <button type="submit" class="p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-gray-800" title="Logout">
                                 <i class="fas fa-sign-out-alt"></i>
                             </button>
                         </form>
