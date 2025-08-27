@@ -1,0 +1,232 @@
+@extends('admin.layouts.admin')
+
+@section('title', 'Add New Project')
+@section('description', 'Create a new project.')
+
+@section('content')
+<div class="admin-page-header">
+    <div class="admin-flex-start">
+        <a href="{{ route('admin.projects.index') }}" class="admin-back-link mr-4">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div>
+            <h1 class="admin-page-title">Add New Project</h1>
+            <p class="admin-page-description">Create and publish a new project</p>
+        </div>
+    </div>
+</div>
+
+<div class="admin-form-container">
+    <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data" id="projectForm" class="space-y-6">
+        @csrf
+        
+        <div class="admin-form-row two-cols">
+            <div class="admin-form-group">
+                <label for="title" class="admin-label admin-label-required">Project Title</label>
+                <input type="text" name="title" id="title" 
+                       class="admin-input @error('title') error @enderror"
+                       placeholder="Enter project title"
+                       value="{{ old('title') }}" 
+                       required>
+                @error('title')
+                    <div class="admin-error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+
+            <div class="admin-form-group">
+                <label for="category" class="admin-label admin-label-required">Category</label>
+                <select name="category" id="category" 
+                        class="admin-select @error('category') error @enderror"
+                        required>
+                    <option value="" disabled selected>Select a category</option>
+                    <option value="residential" {{ old('category') == 'residential' ? 'selected' : '' }}>Residential</option>
+                    <option value="commercial" {{ old('category') == 'commercial' ? 'selected' : '' }}>Commercial</option>
+                </select>
+                <p class="admin-text-muted text-xs mt-2">Choose the project category</p>
+                @error('category')
+                    <div class="admin-error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+        </div>
+
+        <!-- Facilities -->
+        <div class="admin-form-group">
+            <label class="admin-label">Facilities</label>
+            <div class="admin-checkbox-group">
+                @foreach(\App\Models\Facility::all() as $facility)
+                <label class="admin-checkbox-item">
+                    <input type="checkbox" name="facilities[]" value="{{ $facility->id }}"
+                           class="admin-checkbox"
+                           {{ in_array($facility->id, old('facilities', [])) ? 'checked' : '' }}>
+                    <div class="admin-checkbox-content">
+                        <i class="fas {{ $facility->icon }}"></i>
+                        <span>{{ $facility->name }}</span>
+                    </div>
+                </label>
+                @endforeach
+            </div>
+            @error('facilities')
+                <div class="admin-error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="admin-form-group">
+            <label for="short_description" class="admin-label admin-label-required">Short Description</label>
+            <textarea name="short_description" id="short_description" rows="2"
+                      class="admin-input @error('short_description') error @enderror"
+                      placeholder="Write a short description"
+                      maxlength="150"
+                      required>{{ old('short_description') }}</textarea>
+            <div class="admin-flex-between mt-2">
+                <p class="admin-text-muted text-xs">Brief project summary</p>
+                <span class="admin-text-muted text-xs" id="shortDescCounter">0/150</span>
+            </div>
+            @error('short_description')
+                <div class="admin-error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="admin-form-group">
+            <label for="description" class="admin-label admin-label-required">Full Description</label>
+            <textarea name="description" id="description" rows="5"
+                      class="admin-input admin-textarea @error('description') error @enderror"
+                      placeholder="Enter detailed description of the project..."
+                      required>{{ old('description') }}</textarea>
+            <p class="admin-text-muted text-xs mt-2">Include key features, specifications, and important details about the project.</p>
+            @error('description')
+                <div class="admin-error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="admin-form-group">
+            <label for="address" class="admin-label admin-label-required">Project Location</label>
+            <input type="text" name="address" id="address"
+                   class="admin-input @error('address') error @enderror"
+                   placeholder="Enter project location"
+                   value="{{ old('address') }}" 
+                   required>
+            @error('address')
+                <div class="admin-error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <!-- Main Image -->
+        <div class="admin-form-group">
+            <label class="admin-label admin-label-required">Main Project Image</label>
+            <div class="admin-file-upload">
+                <div class="admin-upload-area">
+                    <div class="admin-upload-content">
+                        <i class="fas fa-cloud-upload-alt admin-upload-icon"></i>
+                        <label for="image" class="admin-upload-label">
+                            Upload Image or drag and drop
+                            <input type="file" id="image" name="image" accept="image/*" class="sr-only" data-max-size="2048" required>
+                        </label>
+                        <p class="admin-upload-hint">PNG, JPG, GIF up to 2MB</p>
+                    </div>
+                </div>
+                <div id="main-image-preview" class="admin-image-preview hidden">
+                    <div class="admin-preview-container">
+                        <img src="" alt="Main image preview" class="admin-preview-image">
+                        <button type="button" id="remove-main-image" class="admin-remove-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <p class="admin-success-message">
+                        <i class="fas fa-check-circle"></i>Image selected
+                    </p>
+                </div>
+                @error('image')
+                    <div class="admin-error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+        </div>
+
+        <!-- Gallery -->
+        <div class="admin-form-group">
+            <label class="admin-label">Project Gallery</label>
+            <div class="admin-file-upload">
+                <div class="admin-upload-area">
+                    <div class="admin-upload-content">
+                        <i class="fas fa-images admin-upload-icon"></i>
+                        <label for="gallery" class="admin-upload-label">
+                            Add Images or drag and drop
+                            <input type="file" id="gallery" name="gallery[]" accept="image/*" class="sr-only" multiple data-max-size="2048">
+                        </label>
+                        <p class="admin-upload-hint">Upload up to 20 images (PNG, JPG, GIF up to 2MB each)</p>
+                    </div>
+                </div>
+                <div id="gallery-preview" class="admin-gallery-preview"></div>
+                <div id="gallery-count" class="admin-gallery-count hidden">
+                    <i class="fas fa-images"></i>
+                    <span id="gallery-count-text">0 images selected</span>
+                </div>
+                @error('gallery')
+                    <div class="admin-error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ $message }}
+                    </div>
+                @enderror
+                @error('gallery.*')
+                    <div class="admin-error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="admin-form-group">
+            <label for="status" class="admin-label admin-label-required">Project Status</label>
+            <select name="status" id="status" 
+                    class="admin-select @error('status') error @enderror"
+                    required>
+                <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Published</option>
+            </select>
+            <p class="admin-text-muted text-xs mt-2">Draft projects are only visible to administrators</p>
+            @error('status')
+                <div class="admin-error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <hr class="admin-divider">
+
+        <div class="admin-flex-end admin-gap-4">
+            <a href="{{ route('admin.projects.index') }}" 
+               class="admin-btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                <span>Cancel</span>
+            </a>
+            <button type="submit" 
+                    class="admin-btn-primary">
+                <i class="fas fa-save"></i>
+                <span>Save Project</span>
+            </button>
+        </div>
+    </form>
+</div>
+@endsection
