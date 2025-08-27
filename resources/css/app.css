@@ -2,13 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/*  CSS Inlining */
-.hero-swiper { min-height: 100vh; }
-.mobile-menu { will-change: transform; }
-.nav-link { will-change: transform; }
-
 /* ==========================================
-   BASE CSS
+   BASE STYLES
    ========================================== */
 @layer base {
     html {
@@ -23,20 +18,15 @@
         font-family: "Inter", sans-serif;
         font-display: swap;
     }
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    
+    h1, h2, h3, h4, h5, h6 {
         @apply font-bold tracking-tight;
         font-display: swap;
     }
-}
-
-/* Performance optimizations */
-img {
-    content-visibility: auto;
+    
+    img {
+        content-visibility: auto;
+    }
 }
 
 .swiper-lazy-preloader {
@@ -141,57 +131,37 @@ img {
 }
 
 /* ==========================================
-       Footer 
-       ========================================== */
-
-
-/*  section (links / developments) */
-
+   FOOTER
+   ========================================== */
 .footer-section {
     @apply lg:col-span-3;
 }
-
-/* Section titles */
 
 .footer-heading {
     @apply text-gray-800 font-bold text-base mb-4 tracking-wide;
 }
 
-/*  links list */
-
 .footer-links {
     @apply flex flex-col space-y-3;
-    /*  links list */
 }
-
-/* Footer  links */
 
 .footer-link {
     @apply text-gray-600 text-sm hover:text-orange-500 transition-colors duration-300;
 }
 
-/* Social icons  */
-
 .footer-social {
     @apply flex justify-center space-x-3 mt-10 mb-6;
 }
-
-/* Social media buttons */
 
 .footer-social-link {
     @apply w-10 h-10 bg-orange-500 hover:bg-orange-600 text-black flex items-center justify-center rounded transition-all duration-300 hover:-translate-y-1;
 }
 
-    /* ==========================================
-       Home page
-       ========================================== */
-
-    /* ==========================================
-       Hero section
-       ========================================== */
+/* ==========================================
+   HERO BUTTON
+   ========================================== */
 .btn-hero {
-@apply relative inline-flex items-center px-3 py-3 text-base font-medium text-white bg-black  border border-white overflow-hidden transition-transform duration-300 translate-y-8 ;
-
+    @apply relative inline-flex items-center px-3 py-3 text-base font-medium text-white bg-black border border-white overflow-hidden transition-transform duration-300 translate-y-8;
 }
 
 /* top white line */
@@ -329,4 +299,156 @@ img {
     .hero-swiper h1 span:last-child {
         @apply text-3xl;
     }
+}
+
+
+/* Gallery Modal Styles */
+#modal-image {
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.3s ease-out;
+}
+
+#modal-image.scale-95 {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* telphone section input color */
+.iti__country-name, .iti__selected-dial-code {
+    color: black;
+}
+
+/* ==========
+ project show hero section Section
+  ========== */
+.prj-hero {
+  @apply relative min-h-[85vh] flex items-center;
+}
+.prj-hero-bg {
+  @apply absolute inset-0 w-full h-full object-cover;
+}
+.prj-hero-overlay {
+  @apply absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70;
+}
+.prj-hero-content {
+  @apply relative z-10 container mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-12 py-24;
+}
+.prj-hero-title {
+  @apply text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight;
+}
+.prj-hero-meta {
+  @apply flex flex-wrap items-center justify-center md:justify-start gap-8 text-white/90;
+}
+.prj-hero-meta-item {
+  @apply flex items-center text-lg;
+}
+.prj-hero-icon {
+  @apply mr-3 text-orange-500 text-2xl;
+}
+
+/* ==========
+ Form Box 
+ ========== */
+.prj-form {
+  @apply w-full md:w-[450px] bg-white rounded-2xl p-8 shadow-lg;
+}
+.prj-form-label {
+  @apply block text-sm font-semibold text-gray-700 mb-1.5;
+}
+.prj-form-input {
+  @apply w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500;
+}
+.prj-form-select {
+  @apply w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500;
+}
+.prj-form-btn {
+  @apply w-full h-12 bg-orange-500 text-white rounded-lg font-medium text-base hover:bg-orange-600 transition-colors;
+}
+
+/* ========== 
+About Section
+ ========== */
+.prj-about {
+  @apply bg-gray-100 py-24;
+}
+.prj-section-box {
+  @apply container mx-auto px-4;
+}
+.prj-section-head {
+  @apply mb-8;
+}
+.prj-section-title {
+  @apply text-4xl font-bold mb-2;
+}
+.prj-section-line {
+  @apply w-20 h-1.5 bg-orange-500 rounded-full mb-6;
+}
+.prj-section-text {
+  @apply prose prose-lg max-w-none text-gray-800 leading-relaxed;
+}
+
+/* ==========
+ Facilities Section
+  ========== */
+.prj-facilities {
+  @apply py-24 bg-cover bg-center bg-no-repeat relative;
+}
+.prj-fac-title {
+  @apply text-4xl font-bold text-white mb-2;
+}
+.prj-fac-line {
+  @apply w-20 h-1.5 bg-orange-500 rounded-full;
+}
+.prj-fac-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-16 max-w-6xl mx-auto;
+}
+.prj-fac-item {
+  @apply flex items-center space-x-6;
+}
+.prj-fac-icon {
+  @apply w-28 h-28 flex items-center justify-center;
+}
+.prj-fac-icon i {
+  @apply text-7xl text-white;
+}
+.prj-fac-name {
+  @apply text-white text-2xl font-semibold;
+}
+
+/* ==========
+ Gallery Section 
+  ========== */
+.prj-gallery {
+  @apply py-24 bg-gray-50;
+}
+.prj-gallery-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8;
+}
+.prj-gallery-item {
+  @apply  relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg bg-white cursor-pointer;
+}
+.prj-gallery-item img {
+  @apply w-full h-full object-cover transition-all duration-500 group-hover:scale-110;
+}
+.prj-gallery-overlay {
+  @apply absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300;
+}
+.prj-gallery-zoom {
+  @apply absolute inset-0 flex items-center justify-center;
+}
+.prj-gallery-zoom-icon {
+  @apply w-14 h-14 rounded-full bg-white/90 backdrop-blur flex items-center justify-center transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white;
 }

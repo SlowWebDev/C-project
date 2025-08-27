@@ -1,0 +1,538 @@
+/**
+ * Admin Panel CSS - Clean & Simple
+ * @author SlowWebDev
+ * @version 3.0
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== LAYOUT ===== */
+.admin-main-content {
+    @apply flex-1 mr-64 min-h-screen flex flex-col;
+}
+
+.admin-content-area {
+    @apply flex-1 p-6;
+}
+
+/* ===== PAGE HEADERS ===== */
+.admin-page-header {
+    @apply flex justify-between items-start mb-6 p-6 bg-gray-800 rounded-xl border border-gray-700;
+}
+
+.admin-page-title {
+    @apply text-2xl font-bold text-white mb-1;
+}
+
+.admin-page-description {
+    @apply text-gray-400 text-sm;
+}
+
+/* ===== CARDS ===== */
+.admin-card {
+    @apply bg-gray-800 rounded-xl border border-gray-700 p-6;
+}
+
+.admin-form-container {
+    @apply admin-card max-w-none w-full;
+}
+
+.admin-content-container {
+    @apply admin-card w-full;
+}
+
+/* ===== BUTTONS ===== */
+.admin-btn {
+    @apply inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 border-0 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900;
+}
+
+.admin-btn-primary {
+    @apply admin-btn bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.admin-btn-secondary {
+    @apply admin-btn bg-gray-600 text-white hover:bg-gray-500 focus:ring-gray-500;
+}
+
+.admin-btn-success {
+    @apply admin-btn bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500;
+}
+
+.admin-btn-danger {
+    @apply admin-btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+/* ===== FORMS ===== */
+.admin-form-group {
+    @apply space-y-2;
+}
+
+.admin-form-row {
+    @apply grid gap-6;
+}
+
+.admin-form-row-2 {
+    @apply grid gap-6 grid-cols-1 lg:grid-cols-2;
+}
+
+.admin-form-row.two-cols {
+    @apply admin-form-row-2;
+}
+
+.admin-label {
+    @apply block text-sm font-medium text-gray-300;
+}
+
+.admin-label-required::after {
+    content: ' *';
+    @apply text-red-500;
+}
+
+.admin-input,
+.admin-select,
+.admin-textarea {
+    @apply w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 transition-all duration-200;
+}
+
+.admin-input:focus,
+.admin-select:focus,
+.admin-textarea:focus {
+    @apply outline-none border-blue-500 ring-2 ring-blue-500/20;
+}
+
+.admin-textarea {
+    @apply min-h-[120px] resize-y;
+}
+
+.admin-input.error,
+.admin-select.error,
+.admin-textarea.error {
+    @apply border-red-500 ring-2 ring-red-500/20;
+}
+
+.admin-error-message {
+    @apply text-red-400 text-sm flex items-center gap-1;
+}
+
+/* ===== FILE UPLOADS ===== */
+.admin-upload-area {
+    @apply border-2 border-dashed border-gray-600 rounded-lg p-6 text-center hover:border-blue-500 transition-colors cursor-pointer;
+}
+
+.admin-upload-content {
+    @apply space-y-3;
+}
+
+.admin-upload-icon {
+    @apply text-4xl text-gray-400;
+}
+
+.admin-upload-label {
+    @apply cursor-pointer text-white hover:text-blue-400 transition-colors font-medium;
+}
+
+.admin-upload-hint {
+    @apply text-sm text-gray-400;
+}
+
+.admin-preview-image {
+    @apply w-full h-48 object-cover rounded-lg border border-gray-600;
+}
+
+.admin-remove-btn {
+    @apply absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center text-sm transition-colors;
+}
+
+.admin-success-message {
+    @apply text-emerald-400 text-sm flex items-center gap-1;
+}
+
+
+/* ===== FILE UPLOADS - ADDITIONAL ===== */
+.admin-file-upload {
+    @apply space-y-4;
+}
+
+.admin-image-preview {
+    @apply mt-4;
+}
+
+.admin-preview-container {
+    @apply relative inline-block;
+}
+
+/* ===== GALLERY ===== */
+.admin-gallery-grid {
+    @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4;
+}
+
+.admin-gallery-preview {
+    @apply admin-gallery-grid;
+}
+
+.admin-gallery-item {
+    @apply relative rounded-lg overflow-hidden bg-gray-700 border border-gray-600;
+    aspect-ratio: 1;
+}
+
+.admin-gallery-image {
+    @apply w-full h-full object-cover;
+}
+
+.admin-gallery-count {
+    @apply text-sm text-gray-400 mt-2;
+}
+
+.admin-gallery-overlay {
+    @apply absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center;
+}
+
+.admin-gallery-link {
+    @apply text-white hover:text-blue-400 transition-colors text-xl;
+}
+
+/* ===== TABLES ===== */
+.admin-table-container {
+    @apply overflow-hidden bg-gray-800 rounded-xl border border-gray-700;
+}
+
+.admin-table,
+.admin-main-table {
+    @apply min-w-full divide-y divide-gray-700;
+}
+
+.admin-table-header {
+    @apply px-6 py-4 text-left text-sm font-semibold text-gray-300 border-b border-gray-600;
+}
+
+.admin-table-body {
+    @apply bg-gray-800 divide-y divide-gray-700;
+}
+
+.admin-table-row {
+    @apply transition-colors;
+}
+
+.admin-table-cell {
+    @apply px-6 py-4 text-sm text-white;
+}
+
+.admin-table-cell-nowrap {
+    @apply whitespace-nowrap;
+}
+
+.admin-table-cell-title,
+.admin-table-cell-main {
+    @apply flex items-center space-x-4;
+}
+
+.admin-table-cell-image {
+    @apply h-16 w-16 rounded-xl object-cover border-2 border-gray-600 flex-shrink-0 shadow-sm;
+}
+
+.admin-table-cell-content,
+.admin-table-content {
+    @apply min-w-0 flex-1;
+}
+
+.admin-table-cell-title-text,
+.admin-table-title {
+    @apply text-sm font-medium text-white truncate;
+}
+
+.admin-table-cell-subtitle,
+.admin-table-subtitle {
+    @apply text-sm text-gray-400 truncate;
+}
+
+.admin-table-actions {
+    @apply flex items-center space-x-2;
+}
+
+/* ===== DASHBOARD STATS ===== */
+.admin-stats-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8;
+}
+
+.admin-stat-card {
+    @apply bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl p-6 border border-gray-700;
+}
+
+.admin-stat-icon {
+    @apply w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-2xl text-white;
+}
+
+.admin-stat-content {
+    @apply flex-1;
+}
+
+.admin-stat-value {
+    @apply text-3xl font-bold text-white mb-1;
+}
+
+.admin-stat-label {
+    @apply text-gray-400 text-sm;
+}
+
+.admin-stat-icon-blue { @apply bg-blue-600; }
+.admin-stat-icon-emerald { @apply bg-emerald-600; }
+.admin-stat-icon-amber { @apply bg-amber-600; }
+.admin-stat-icon-purple { @apply bg-purple-600; }
+.admin-stat-icon-red { @apply bg-red-600; }
+
+/* ===== BADGES & STATUS ===== */
+.admin-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.admin-badge-success {
+    @apply admin-badge bg-emerald-100 text-emerald-800;
+}
+
+.admin-badge-warning {
+    @apply admin-badge bg-amber-100 text-amber-800;
+}
+
+.admin-status-published {
+    @apply admin-badge bg-emerald-900 text-emerald-300;
+}
+
+.admin-status-draft {
+    @apply admin-badge bg-amber-900 text-amber-300;
+}
+
+.admin-category-residential {
+    @apply admin-badge bg-emerald-900 text-emerald-300;
+}
+
+.admin-category-commercial {
+    @apply admin-badge bg-purple-900 text-purple-300;
+}
+
+/* ===== CHECKBOXES ===== */
+.admin-checkbox-group {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+
+.admin-checkbox-item {
+    @apply relative flex items-center space-x-3 p-4 bg-gray-700/50 rounded-lg border border-gray-600 hover:border-gray-500 cursor-pointer transition-colors;
+}
+
+.admin-checkbox {
+    @apply w-4 h-4 text-blue-600 bg-gray-700 border-gray-500 rounded focus:ring-blue-500;
+}
+
+.admin-checkbox-content {
+    @apply flex items-center space-x-2 text-gray-300;
+}
+
+/* ===== EMPTY STATES ===== */
+.admin-empty-state {
+    @apply flex flex-col items-center justify-center py-12 text-center;
+}
+
+.admin-empty-state i,
+.admin-empty-icon {
+    @apply text-4xl text-gray-500 mb-4;
+}
+
+.admin-empty-state .title,
+.admin-empty-title {
+    @apply text-lg font-medium text-gray-300 mb-2;
+}
+
+.admin-empty-state .description,
+.admin-empty-description {
+    @apply text-gray-400;
+}
+
+/* ===== SHOW PAGES ===== */
+.admin-project-hero {
+    @apply relative w-full h-96 rounded-xl overflow-hidden mb-8;
+}
+
+.admin-hero-image {
+    @apply w-full h-full object-cover;
+}
+
+.admin-hero-overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent;
+}
+
+.admin-hero-content {
+    @apply absolute bottom-0 left-0 right-0 p-8 text-white;
+}
+
+.admin-hero-meta {
+    @apply flex items-center gap-4 mb-4;
+}
+
+.admin-category-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+}
+
+.admin-category-badge.residential {
+    @apply bg-emerald-600/20 text-emerald-300 border border-emerald-500/30;
+}
+
+.admin-category-badge.commercial {
+    @apply bg-purple-600/20 text-purple-300 border border-purple-500/30;
+}
+
+.admin-category-badge.media {
+    @apply bg-blue-600/20 text-blue-300 border border-blue-500/30;
+}
+
+.admin-date-badge {
+    @apply inline-flex items-center gap-2 text-sm text-gray-300;
+}
+
+.admin-hero-title {
+    @apply text-3xl font-bold mb-3 leading-tight;
+}
+
+.admin-hero-description {
+    @apply text-lg text-gray-200 leading-relaxed max-w-3xl;
+}
+
+.admin-show-content {
+    @apply space-y-8;
+}
+
+.admin-info-card {
+    @apply bg-gray-800 rounded-xl p-6 border border-gray-700;
+}
+
+.admin-section-title {
+    @apply flex items-center gap-3 text-lg font-semibold text-white mb-4;
+}
+
+.admin-section-text {
+    @apply text-gray-300 leading-relaxed;
+}
+
+.admin-description-content {
+    @apply text-gray-300 leading-relaxed whitespace-pre-line;
+}
+
+.admin-facilities-grid {
+    @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4;
+}
+
+.admin-facility-item {
+    @apply flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg border border-gray-600;
+}
+
+.admin-facility-item i {
+    @apply text-blue-400;
+}
+
+.admin-facility-item span {
+    @apply text-gray-300 text-sm;
+}
+
+/* ===== FILTERS ===== */
+.admin-filter-group {
+    @apply flex flex-col space-y-1;
+}
+
+.admin-filter-actions {
+    @apply flex items-center gap-4 mt-6;
+}
+
+/* ===== SHOW PAGES - STATUS ===== */
+.admin-status-section {
+    @apply flex items-center justify-between p-4 bg-gray-700/30 rounded-lg border border-gray-600 mt-8;
+}
+
+.admin-status-info {
+    @apply flex items-center gap-3;
+}
+
+.admin-status-indicator {
+    @apply w-3 h-3 rounded-full;
+}
+
+.admin-status-indicator.published {
+    @apply bg-emerald-500;
+}
+
+.admin-status-indicator.draft {
+    @apply bg-amber-500;
+}
+
+.admin-status-text {
+    @apply text-white font-medium;
+}
+
+.admin-last-updated {
+    @apply text-gray-400 text-sm;
+}
+
+/* =====  CONTAINERS ===== */
+.admin-container-3xl {
+    @apply max-w-4xl;
+}
+
+/* ===== UTILITIES ===== */
+.admin-flex-start {
+    @apply flex items-center justify-start;
+}
+
+.admin-flex-between {
+    @apply flex items-center justify-between;
+}
+
+.admin-flex-center {
+    @apply flex items-center justify-center;
+}
+
+.admin-flex-end {
+    @apply flex items-center justify-end;
+}
+
+.admin-text-muted {
+    @apply text-gray-400;
+}
+
+.admin-divider {
+    @apply h-px bg-gray-700 my-6;
+}
+
+.admin-back-link {
+    @apply text-gray-400 hover:text-white transition-colors inline-flex items-center;
+}
+
+.admin-sr-only {
+    @apply sr-only;
+}
+
+.admin-gap-4 {
+    @apply gap-4;
+}
+
+.admin-mt-6 {
+    @apply mt-6;
+}
+
+.admin-mt-8 {
+    @apply mt-8;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .admin-main-content {
+        @apply mr-0;
+    }
+    
+    .admin-page-header {
+        @apply flex-col items-start gap-4;
+    }
+    
+    .admin-form-row-2 {
+        @apply grid-cols-1;
+    }
+}

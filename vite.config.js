@@ -3,7 +3,13 @@ import laravel from 'laravel-vite-plugin';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: [
+                'resources/css/app.css',
+                'resources/css/admin.css',
+                'resources/js/app.js',
+                'resources/js/main.js',
+                'resources/js/admin.js'
+            ],
             refresh: true,
         }),
     ],
@@ -41,11 +47,6 @@ export default defineConfig({
     optimizeDeps: {
         include: ['swiper', 'aos'],
         exclude: ['@fortawesome/fontawesome-free']
-    },
-    server: {
-        hmr: {
-            overlay: false
-        }
     },
     css: {
         devSourcemap: false
