@@ -8,13 +8,14 @@
             
             <!-- Logo + Description -->
             <div class="lg:col-span-4">
-        <img src="{{ asset('assets/images/logo-black.png') }}" 
+        <img src="{{ \App\Models\Setting::getLogo('logo-footer') }}" class="site-logo" data-type="logo-footer" 
      alt="company Logo" 
      class="w-44 h-auto mb-4"
      loading="lazy"
      decoding="async"
      width="176"
-     height="auto">
+     height="auto"
+     data-logo-type="logo-footer">
 
                 <p class="text-gray-600 text-sm leading-relaxed max-w-sm">
                     The company's extensive experience and focus on quality and innovation,
@@ -28,7 +29,7 @@
                 <ul class="footer-links">
                     <li><a href="{{ route('about') }}" class="footer-link">ABOUT US</a></li>
                     <li><a href="{{ route('media.index') }}" class="footer-link">MEDIA CENTER</a></li>
-                    <li><a href="{{ route('careers') }}" class="footer-link">CAREERS</a></li>
+                    <li><a href="{{ route('careers.index') }}" class="footer-link">CAREERS</a></li>
                 </ul>
             </div>
 

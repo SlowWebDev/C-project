@@ -5,7 +5,7 @@
             <!-- Logo -->
 <div class="flex-shrink-0 pl-4">
     <a href="{{ route('home') }}" class="flex items-center">
-<img src="{{ asset('assets/images/logo.png') }}" 
+<img src="{{ \App\Models\Setting::getLogo('logo') }}" class="site-logo" data-type="logo" 
      class="h-24 w-auto" 
      alt="Company Logo"
      fetchpriority="high"
@@ -34,12 +34,12 @@
                            class="nav-desktop nav-link {{ request()->routeIs('media.*') ? 'nav-active' : '' }}">
                             MEDIA CENTER
                         </a>
-                        <a href="{{ route('careers') }}" 
-                           class="nav-desktop nav-link {{ request()->routeIs('careers') ? 'nav-active' : '' }}">
+                        <a href="{{ route('careers.index') }}" 
+                           class="nav-desktop nav-link {{ request()->routeIs('careers.*') ? 'nav-active' : '' }}">
                             CAREERS
                         </a>
-                        <a href="{{ route('contact') }}" 
-                           class="nav-desktop nav-link {{ request()->routeIs('contact') ? 'nav-active' : '' }}">
+                        <a href="{{ route('contact.index') }}" 
+                           class="nav-desktop nav-link {{ request()->routeIs('contact.*') ? 'nav-active' : '' }}">
                             CONTACT US
                         </a>
                     </div>
@@ -97,11 +97,11 @@
                    class="drawer-item {{ request()->routeIs('media.*') ? 'active' : '' }}">
                     MEDIA CENTER
                 </a>
-                <a href="{{ route('careers') }}" 
+                <a href="{{ route('careers.index') }}" 
                    class="drawer-item {{ request()->routeIs('careers') ? 'active' : '' }}">
                     CAREERS
                 </a>
-                <a href="{{ route('contact') }}" 
+                <a href="{{ route('contact.index') }}" 
                    class="drawer-item {{ request()->routeIs('contact') ? 'active' : '' }}">
                     CONTACT US
                 </a>

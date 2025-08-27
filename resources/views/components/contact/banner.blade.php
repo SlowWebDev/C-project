@@ -18,7 +18,7 @@
             <div class="relative z-10 container mx-auto px-4">
                 <div class="max-w-4xl ml-12 sm:ml-16 md:ml-20 lg:ml-24 mt-24 sm:mt-28 md:mt-32 lg:mt-36">
                     <img src="{{ asset('assets/images/contact/contact-us.png') }}"
-                        alt="Careers"
+                        alt="Contact us"
                         class="w-auto max-w-[70px] sm:max-w-[85px] md:max-w-[100px] lg:max-w-[120px] drop-shadow-2xl">
                 </div>
             </div>

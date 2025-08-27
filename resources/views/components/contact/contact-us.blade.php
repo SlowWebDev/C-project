@@ -10,48 +10,60 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
       <!-- Contact Form -->
-      <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl" data-aos="fade-right" data-aos-offset="0">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Send us a message</h2>
-        <form class="space-y-6" onsubmit="event.preventDefault(); showError();">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
-              <input type="text" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 transition">
+      <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-xl" data-aos="fade-right" data-aos-offset="0">
+        <h2 class="text-2xl font-bold mb-6 text-gray-900">Send us a message</h2>
+        <div class="space-y-5">
+          <form onsubmit="event.preventDefault(); showError();" class="space-y-4">
+            <div class="space-y-4">
+              <!-- First & Last Name -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1.5">First Name <span class="text-red-500">*</span></label>
+                  <input type="text" name="first_name" placeholder="First Name" required
+                         class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500">
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1.5">Last Name <span class="text-red-500">*</span></label>
+                  <input type="text" name="last_name" placeholder="Last Name" required
+                         class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500">
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email <span class="text-red-500">*</span></label>
+                <input type="email" name="email" placeholder="Email" required
+                       class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500">
+              </div>
+
+              <!-- Phone Number -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
+                <input type="tel" name="phone" placeholder="0123456789" pattern="[0-9]*" inputmode="numeric"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                       class="phone-input w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-black text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500 focus:text-black">
+              </div>
+
+              <!-- Message -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Message <span class="text-red-500">*</span></label>
+                <textarea rows="5" name="message" placeholder="Your message" required
+                          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500"></textarea>
+              </div>
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Last Name <span class="text-red-500">*</span></label>
-              <input type="text" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 transition">
+
+            <!-- Error Message -->
+            <div class="hidden text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg" id="errorMessage">
+              ⚠️ Message sending is currently disabled.
             </div>
-          </div>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Email <span class="text-red-500">*</span></label>
-            <input type="email" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 transition">
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-            <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
-              <select class="w-full sm:w-24 px-2 py-3 border rounded-lg sm:rounded-l-lg focus:ring-2 focus:ring-orange-500">
-                <option>+20</option>
-              </select>
-              <input type="tel" class="flex-1 px-4 py-3 border rounded-lg sm:rounded-r-lg focus:ring-2 focus:ring-orange-500 transition">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Message <span class="text-red-500">*</span></label>
-            <textarea rows="5" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 transition"></textarea>
-          </div>
-
-          <div id="errorMessage" class="hidden text-red-600 text-sm bg-red-100 p-3 rounded-lg">
-            ⚠️ Message sending is currently disabled.
-          </div>
-
-          <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-lg transition flex items-center justify-center">
-            <i class="fas fa-paper-plane w-5 h-5 mr-2"></i> Send Message
-          </button>
-        </form>
+            <!-- Submit Button -->
+            <button type="submit"
+                    class="w-full h-12 bg-orange-500 text-white rounded-lg font-medium text-base hover:bg-orange-600 transition-colors flex items-center justify-center">
+              <i class="fas fa-paper-plane w-5 h-5 mr-2"></i> Send Message
+            </button>
+          </form>
+        </div>
       </div>
 
       <!-- Contact Info & Map -->

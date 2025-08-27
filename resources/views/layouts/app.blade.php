@@ -20,8 +20,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"></noscript>
         
-    <!-- Custom CSS -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Custom CSS and JS -->
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/main.js'])
     
     @stack('styles')
 </head>
