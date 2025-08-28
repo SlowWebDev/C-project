@@ -13,48 +13,75 @@
       <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-xl" data-aos="fade-right" data-aos-offset="0">
         <h2 class="text-2xl font-bold mb-6 text-gray-900">Send us a message</h2>
         <div class="space-y-5">
-          <form onsubmit="event.preventDefault(); showError();" class="space-y-4">
+          @if(session('success'))
+            <div class="bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg mb-4">
+              <i class="fas fa-check-circle mr-2"></i>
+              {{ session('success') }}
+            </div>
+          @endif
+
+          @if(session('error'))
+            <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-4">
+              <i class="fas fa-exclamation-circle mr-2"></i>
+              {{ session('error') }}
+            </div>
+          @endif
+
+          <form action="{{ route('contact.store') }}" method="POST" class="space-y-4">
+            @csrf
+            <input type="hidden" name="type" value="general">
+            
             <div class="space-y-4">
               <!-- First & Last Name -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-semibold text-gray-700 mb-1.5">First Name <span class="text-red-500">*</span></label>
-                  <input type="text" name="first_name" placeholder="First Name" required
+                  <input type="text" name="first_name" placeholder="First Name" required value="{{ old('first_name') }}"
                          class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500">
+                  @error('first_name')
+                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                  @enderror
                 </div>
                 <div>
                   <label class="block text-sm font-semibold text-gray-700 mb-1.5">Last Name <span class="text-red-500">*</span></label>
-                  <input type="text" name="last_name" placeholder="Last Name" required
+                  <input type="text" name="last_name" placeholder="Last Name" required value="{{ old('last_name') }}"
                          class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500">
+                  @error('last_name')
+                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                  @enderror
                 </div>
               </div>
 
               <!-- Email -->
               <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email <span class="text-red-500">*</span></label>
-                <input type="email" name="email" placeholder="Email" required
+                <input type="email" name="email" placeholder="Email" required value="{{ old('email') }}"
                        class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500">
+                @error('email')
+                  <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                @enderror
               </div>
 
               <!-- Phone Number -->
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
-                <input type="tel" name="phone" placeholder="0123456789" pattern="[0-9]*" inputmode="numeric"
-                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number <span class="text-red-500">*</span></label>
+                <input type="tel" name="phone" placeholder="0123456789" pattern="[0-9]*" inputmode="numeric" required
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{ old('phone') }}"
                        class="phone-input w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-black text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500 focus:text-black">
+                @error('phone')
+                  <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                @enderror
               </div>
 
               <!-- Message -->
               <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Message <span class="text-red-500">*</span></label>
                 <textarea rows="5" name="message" placeholder="Your message" required
-                          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500"></textarea>
+                          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500">{{ old('message') }}</textarea>
+                @error('message')
+                  <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                @enderror
               </div>
-            </div>
-
-            <!-- Error Message -->
-            <div class="hidden text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg" id="errorMessage">
-              ⚠️ Message sending is currently disabled.
             </div>
 
             <!-- Submit Button -->
@@ -106,10 +133,4 @@
 
     </div>
   </div>
-
-  <script>
-    function showError() {
-      document.getElementById("errorMessage").classList.remove("hidden");
-    }
-  </script>
 </section>

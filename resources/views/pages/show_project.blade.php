@@ -32,43 +32,62 @@
         </div>
 
         <!-- Contact Form -->
-        <div class="prj-form">
+        <form action="{{ route('project.inquiry', $project->id) }}" method="POST" class="prj-form">
+            @csrf
+            <input type="hidden" name="type" value="project_inquiry">
+            <input type="hidden" name="project_id" value="{{ $project->id }}">
+            
             <div class="space-y-5">
                 <div class="space-y-4">
                     <div>
                         <label class="prj-form-label">First Name</label>
-                        <input type="text" placeholder="First Name" class="prj-form-input">
+                        <input type="text" name="first_name" placeholder="First Name" class="prj-form-input" required value="{{ old('first_name') }}">
+                        @error('first_name')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                     
                     <div>
                         <label class="prj-form-label">Last Name</label>
-                        <input type="text" placeholder="Last Name" class="prj-form-input">
+                        <input type="text" name="last_name" placeholder="Last Name" class="prj-form-input" required value="{{ old('last_name') }}">
+                        @error('last_name')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="prj-form-label">Email</label>
-                        <input type="email" placeholder="Email" class="prj-form-input">
+                        <input type="email" name="email" placeholder="Email" class="prj-form-input" required value="{{ old('email') }}">
+                        @error('email')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
 
+                    <div>
                         <label class="prj-form-label">Phone Number</label>
-                            <div class="relative">
-                                <input type="tel" pattern="[0-9]*" inputmode="numeric"
-                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                                       class="phone-input prj-form-input"
-                                       placeholder="Phone number">
+                        <div class="relative">
+                            <input type="tel" name="phone" pattern="[0-9]*" inputmode="numeric"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                   class="phone-input prj-form-input"
+                                   placeholder="Phone number" required value="{{ old('phone') }}">
                         </div>
+                        @error('phone')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
 
                     <div>
                         <label class="prj-form-label">Project</label>
-                        <select class="prj-form-select">
-                            <option value="palm_island">Palm Island</option>
+                        <select class="prj-form-select" disabled>
+                            <option value="{{ $project->id }}">{{ $project->title }}</option>
                         </select>
+                        <p class="text-sm text-gray-400 mt-1">Inquiry for: {{ $project->title }}</p>
                     </div>
                 </div>
 
-                <button type="submit" class="prj-form-btn">Submit</button>
+                <button type="submit" class="prj-form-btn">Submit Inquiry</button>
             </div>
-        </div>
+        </form>
     </div>
 </section>
 

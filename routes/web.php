@@ -45,6 +45,11 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store')
     ->middleware('throttle:3,10'); // Max 3 submissions per 10 minutes
 
+// Project 
+Route::post('/projects/{project}/inquiry', [ContactController::class, 'storeProjectInquiry'])
+    ->name('project.inquiry')
+    ->middleware('throttle:3,10'); 
+
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
@@ -82,7 +87,10 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     ]);
 
     // Contact Management
-    Route::resource('contacts', AdminContactController::class);
+    Route::get('contacts', [AdminContactController::class, 'index'])->name('contacts.index');
+    Route::delete('contacts/{contact}', [AdminContactController::class, 'destroy'])->name('contacts.destroy');
+    Route::patch('contacts/{contact}/status', [AdminContactController::class, 'updateStatus'])->name('contacts.status');
+    Route::patch('contacts/mark-all-read', [AdminContactController::class, 'markAllAsRead'])->name('contacts.mark-all-read');
 
     // Careers Management
     Route::prefix('careers')->name('careers.')->group(function () {

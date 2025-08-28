@@ -502,41 +502,68 @@ class FileUploadManager {
     }
 }
 
-/* ===== DIALOG MANAGER ===== */
-class DialogManager {
-    static confirm(message = 'Are you sure?') {
-        return new Promise(resolve => {
-            const dialog = this.createDialog(message);
-            document.body.appendChild(dialog);
-            this.setupDialogEvents(dialog, resolve);
-        });
+/* ===== CONTACT MANAGER ===== */
+class ContactManager {
+    static async updateStatus(contactId, status) {
+        try {
+            const response = await fetch(`/admin/contacts/${contactId}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ status: status })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                ToastManager.success('Status updated successfully');
+                // Refresh the page to show updated status
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                ToastManager.error(data.message || 'Failed to update status');
+            }
+        } catch (error) {
+            console.error('Error updating contact status:', error);
+            ToastManager.error('Failed to update status');
+        }
     }
 
-    static createDialog(msg) {
-        const dialog = document.createElement('div');
-        dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-        dialog.innerHTML = `
-            <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 border border-gray-700">
-                <h3 class="text-lg font-medium text-white mb-2">Confirmation</h3>
-                <p class="text-gray-300 mb-4">${msg}</p>
-                <div class="flex justify-end gap-3">
-                    <button class="confirm-no px-4 py-2 bg-gray-600 text-white rounded">Cancel</button>
-                    <button class="confirm-yes px-4 py-2 bg-red-600 text-white rounded">Confirm</button>
-                </div>
-            </div>`;
-        return dialog;
+    static async markAsRead(contactId) {
+        return this.updateStatus(contactId, 'read');
     }
 
-    static setupDialogEvents(dialog, resolve) {
-        const close = (val) => { dialog.remove(); resolve(val); };
-        dialog.querySelector('.confirm-yes').addEventListener('click', () => close(true));
-        dialog.querySelector('.confirm-no').addEventListener('click', () => close(false));
-        dialog.addEventListener('click', e => { if (e.target === dialog) close(false); });
-        document.addEventListener('keydown', function esc(e) {
-            if (e.key === 'Escape') { close(false); document.removeEventListener('keydown', esc); }
-        });
+    static async markAsReplied(contactId) {
+        return this.updateStatus(contactId, 'replied');
+    }
+
+    static async markAllAsRead() {
+        try {
+            const response = await fetch('/admin/contacts/mark-all-read', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                ToastManager.success(`${data.count} messages marked as read`);
+                // Refresh the page to show updated statuses
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                ToastManager.error(data.message || 'Failed to mark all as read');
+            }
+        } catch (error) {
+            console.error('Error marking all as read:', error);
+            ToastManager.error('Failed to mark all as read');
+        }
     }
 }
+
 
 /* ===== MAIN ADMIN PANEL ===== */
 class AdminPanel {
@@ -576,10 +603,32 @@ if (document.readyState === 'loading') {
     AdminPanel.initialize();
 }
 
+/* ===== MESSAGE UTILS ===== */
+class MessageUtils {
+    static toggleMessage(contactId) {
+        const fullMessage = document.getElementById(`full-message-${contactId}`);
+        const toggleText = document.getElementById(`toggle-text-${contactId}`);
+        
+        if (fullMessage && toggleText) {
+            if (fullMessage.classList.contains('hidden')) {
+                fullMessage.classList.remove('hidden');
+                toggleText.textContent = 'Show less';
+            } else {
+                fullMessage.classList.add('hidden');
+                toggleText.textContent = 'Show more';
+            }
+        }
+    }
+}
+
 /* ===== EXPORT FOR EXTERNAL USE ===== */
 window.AdminPanel = {
     toast: ToastManager,
-    dialog: DialogManager,
     fileUpload: FileUploadManager,
-    imagePreview: ImagePreviewManager
+    imagePreview: ImagePreviewManager,
+    contact: ContactManager,
+    message: MessageUtils
 };
+
+// Global function for backward compatibility
+window.toggleMessage = MessageUtils.toggleMessage;

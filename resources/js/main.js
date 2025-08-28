@@ -3,6 +3,29 @@
  */
 
 /* ===========================
+    FORM UTILS
+=========================== */
+
+// Helper function to update button to success state
+const updateButtonToSuccess = (submitBtn, message = 'Submitted Successfully!') => {
+    submitBtn.className = submitBtn.className
+        .replace(/bg-orange-\d+/g, 'bg-green-500')
+        .replace(/hover:bg-orange-\d+/g, '')
+        .replace('hover:bg-orange-600', '')
+        .replace('transition-colors', '');
+    submitBtn.innerHTML = `<i class="fas fa-check mr-2"></i>${message}`;
+    submitBtn.style.cursor = 'default';
+    submitBtn.style.backgroundColor = '#10b981'; // Force green color
+    submitBtn.disabled = true;
+};
+
+// Helper function to generate form key
+const generateFormKey = (form, email) => {
+    const formData = new FormData(form);
+    return `${form.action.split('/').pop()}_${email}${formData.get('job_id') ? '_' + formData.get('job_id') : ''}`;
+};
+
+/* ===========================
     FORM HANDLER
 =========================== */
 
@@ -20,8 +43,7 @@ const initFormHandler = () => {
             
             if (!email || !submitBtn) return;
             
-            // Generate  key
-            const formKey = `${form.action.split('/').pop()}_${email}${formData.get('job_id') ? '_' + formData.get('job_id') : ''}`;
+            const formKey = generateFormKey(form, email);
             
             // Check if already submitted OR currently submitting
             if (localStorage.getItem(formKey) || submittedForms.has(formKey)) {
@@ -56,10 +78,7 @@ const initFormHandler = () => {
                     localStorage.setItem(formKey, Date.now());
                     
                     // Update button to success state - PERMANENT
-                    submitBtn.className = submitBtn.className.replace(/bg-orange-\d+/, 'bg-green-500').replace('hover:bg-orange-600', '');
-                    submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Submitted Successfully!';
-                    submitBtn.style.cursor = 'default';
-                    // Keep disabled permanently
+                    updateButtonToSuccess(submitBtn);
                     
                     // Reset form but keep button disabled
                     form.reset();
@@ -82,6 +101,7 @@ const initFormHandler = () => {
         });
     });
     
+    // Check for already submitted forms on page load
     setTimeout(() => {
         forms.forEach(form => {
             const emailInput = form.querySelector('input[name="email"]');
@@ -92,14 +112,10 @@ const initFormHandler = () => {
                     const email = emailInput.value?.toLowerCase().trim();
                     if (!email) return;
                     
-                    const formData = new FormData(form);
-                    const formKey = `${form.action.split('/').pop()}_${email}${formData.get('job_id') ? '_' + formData.get('job_id') : ''}`;
+                    const formKey = generateFormKey(form, email);
                     
                     if (localStorage.getItem(formKey)) {
-                        submitBtn.className = submitBtn.className.replace(/bg-orange-\d+/, 'bg-green-500').replace('hover:bg-orange-600', '');
-                        submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Already Submitted!';
-                        submitBtn.style.cursor = 'default';
-                        submitBtn.disabled = true;
+                        updateButtonToSuccess(submitBtn, 'Already Submitted!');
                     }
                 });
             }

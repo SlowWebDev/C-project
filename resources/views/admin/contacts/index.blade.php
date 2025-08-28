@@ -10,11 +10,7 @@
         <p class="admin-page-description">Manage and respond to customer inquiries</p>
     </div>
     <div class="admin-flex-start admin-gap-4">
-        <button class="admin-btn-secondary">
-            <i class="fas fa-filter"></i>
-            <span>Filter</span>
-        </button>
-        <button class="admin-btn-primary">
+        <button onclick="AdminPanel.contact.markAllAsRead()" class="admin-btn-primary">
             <i class="fas fa-envelope-open"></i>
             <span>Mark All Read</span>
         </button>
@@ -35,52 +31,95 @@
                 </tr>
             </thead>
             <tbody class="admin-table-body">
-                {{-- Example data structure - replace with actual data --}}
-                @forelse([] as $message)
+                @forelse($contacts as $contact)
                     <tr class="admin-table-row">
                         <td class="admin-table-cell">
                             <div class="admin-flex-start admin-gap-4">
-                                <div class="w-10 h-10 bg-blue-600 rounded-full  text-white font-semibold">
-                                    {{ strtoupper(substr('John Doe', 0, 1)) }}
+                                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                                    {{ strtoupper(substr($contact->first_name, 0, 1)) }}
                                 </div>
                                 <div class="admin-table-cell-content">
-                                    <div class="admin-table-cell-title-text">John Doe</div>
-                                    <div class="admin-table-cell-subtitle">john@example.com</div>
+                                    <div class="admin-table-cell-title-text">{{ $contact->first_name }} {{ $contact->last_name }}</div>
+                                    <div class="admin-table-cell-subtitle">{{ $contact->email }}</div>
+                                    @if($contact->phone)
+                                        <div class="admin-table-cell-subtitle">{{ $contact->phone }}</div>
+                                    @endif
                                 </div>
                             </div>
                         </td>
                         <td class="admin-table-cell">
-                            <div class="admin-table-cell-title-text">Project Inquiry</div>
+                            <div class="admin-table-cell-title-text">
+                                {{ $contact->type === 'project_inquiry' ? 'Project Inquiry' : 'General Contact' }}
+                            </div>
+                            @if($contact->project)
+                                <div class="admin-table-cell-subtitle">{{ $contact->project->title }}</div>
+                            @endif
                         </td>
                         <td class="admin-table-cell">
-                            <p class="admin-text-muted">{{ Str::limit('I am interested in discussing a potential project...', 50) }}</p>
+                            <div class="max-w-xs">
+                                <p class="admin-text-muted text-sm leading-5">{{ Str::limit($contact->message, 80) }}</p>
+                                @if(strlen($contact->message) > 80)
+                                    <button onclick="toggleMessage({{ $contact->id }})" class="text-blue-500 hover:text-blue-700 text-xs mt-1">
+                                        <span id="toggle-text-{{ $contact->id }}">Show more</span>
+                                    </button>
+                                    <div id="full-message-{{ $contact->id }}" class="hidden mt-2 p-2 bg-gray-50 rounded text-sm">
+                                        {{ $contact->message }}
+                                    </div>
+                                @endif
+                            </div>
                         </td>
                         <td class="admin-table-cell">
-                            <span class="admin-status-draft">Unread</span>
+                            @if($contact->status === 'new')
+                                <span class="admin-status-draft">New</span>
+                            @elseif($contact->status === 'read')
+                                <span class="admin-status-active">Read</span>
+                            @else
+                                <span class="admin-status-published">Replied</span>
+                            @endif
                         </td>
                         <td class="admin-table-cell admin-text-muted">
-                            {{ now()->diffForHumans() }}
+                            {{ $contact->created_at->diffForHumans() }}
                         </td>
                         <td class="admin-table-cell">
                             <div class="admin-table-actions">
-                                <button class="admin-btn-primary" title="View Message">
-                                    <i class="fas fa-eye"></i>
-                                    <span class="admin-sr-only">View</span>
-                                </button>
-                                <button class="admin-btn-success" title="Mark as Read">
-                                    <i class="fas fa-check"></i>
-                                    <span class="admin-sr-only">Mark Read</span>
-                                </button>
-                                <button class="admin-btn-danger" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                    <span class="admin-sr-only">Delete</span>
-                                </button>
+                                @if($contact->status === 'new')
+                                    <button onclick="AdminPanel.contact.markAsRead({{ $contact->id }})" class="admin-btn-success" title="Mark as Read">
+                                        <i class="fas fa-envelope-open"></i>
+                                        <span class="admin-sr-only">Mark Read</span>
+                                    </button>
+                                @elseif($contact->status === 'read')
+                                    <button onclick="AdminPanel.contact.markAsReplied({{ $contact->id }})" class="admin-btn-secondary" title="Mark as Replied">
+                                        <i class="fas fa-reply"></i>
+                                        <span class="admin-sr-only">Mark Replied</span>
+                                    </button>
+                                @else
+                                    <button class="admin-btn-secondary" disabled title="Completed">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="admin-sr-only">Done</span>
+                                    </button>
+                                @endif
+                                
+                                <a href="mailto:{{ $contact->email }}?subject=Re: Your {{ $contact->type === 'project_inquiry' ? 'Project Inquiry' : 'Contact' }}" 
+                                   class="admin-btn-primary" title="Reply via Email">
+                                    <i class="fas fa-envelope"></i>
+                                    <span class="admin-sr-only">Email</span>
+                                </a>
+                                
+                                <form action="{{ route('admin.contacts.destroy', $contact) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="admin-btn-danger" title="Delete"
+                                            onclick="return confirm('Are you sure you want to delete this contact?')">
+                                        <i class="fas fa-trash"></i>
+                                        <span class="admin-sr-only">Delete</span>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="admin-table-cell ">
+                        <td colspan="6" class="admin-table-cell">
                             <div class="admin-empty-state">
                                 <i class="fas fa-inbox"></i>
                                 <p class="title">No Messages Found</p>
@@ -94,10 +133,10 @@
     </div>
 </div>
 
-{{-- Pagination if needed --}}
-{{-- @if($messages && $messages->count() > 0)
+{{-- Pagination --}}
+@if($contacts->hasPages())
     <div class="admin-mt-6">
-        {{ $messages->links() }}
+        {{ $contacts->links() }}
     </div>
-@endif --}}
+@endif
 @endsection
