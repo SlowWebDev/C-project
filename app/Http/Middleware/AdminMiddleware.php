@@ -18,6 +18,6 @@ class AdminMiddleware
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         
-        return redirect()->route('login');
+        return redirect()->route('admin.login');
     }
 }

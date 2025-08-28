@@ -12,7 +12,7 @@
         </div>
         
         <div class="bg-gray-800 rounded-xl p-8 border border-gray-700">
-            <form action="{{ url('/admin/login') }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.login.submit') }}" method="POST" class="space-y-6">
                 @csrf
                 
                 <div class="space-y-4">

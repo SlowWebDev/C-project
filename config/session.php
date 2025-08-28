@@ -20,10 +20,6 @@ return [
 
     'driver' => env('SESSION_DRIVER', 'database'),
 
-    'secure' => env('SESSION_SECURE_COOKIE', true),
-    'http_only' => true,
-    'same_site' => 'strict',
-
     /*
     |--------------------------------------------------------------------------
     | Session Lifetime
@@ -38,7 +34,7 @@ return [
 
     'lifetime' => (int) env('SESSION_LIFETIME', 60),
 
-    'expire_on_close' => true,
+    'expire_on_close' => false,
 
     /*
     |--------------------------------------------------------------------------

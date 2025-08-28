@@ -56,9 +56,14 @@ Route::post('/projects/{project}/inquiry', [ContactController::class, 'storeProj
 | Authentication Routes
 |--------------------------------------------------------------------------
 */
+// Redirect login to admin.login for backward compatibility
+Route::get('login', function() {
+    return redirect()->route('admin.login');
+})->name('login');
+
 Route::middleware(['web', 'guest'])->group(function () {
-    Route::get('admin/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('admin/login', [LoginController::class, 'login'])->name('login.submit');
+    Route::get('admin/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('admin/login', [LoginController::class, 'login'])->name('admin.login.submit');
 });
 
 /*
