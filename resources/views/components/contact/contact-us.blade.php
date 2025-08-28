@@ -96,39 +96,55 @@
       <!-- Contact Info & Map -->
       <div class="space-y-6" data-aos="fade-left" data-aos-offset="0">
         <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">Contact Information</h2>
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            {{ isset($settings['contact_title']) && $settings['contact_title'] ? $settings['contact_title'] : 'Contact Information' }}
+          </h2>
 
           <div class="space-y-6">
+            @if(isset($settings['address_title'], $settings['address_content']) && $settings['address_content'])
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-4">
               <div class="flex-shrink-0 bg-orange-500/10 p-3 rounded-lg text-orange-500"><i class="fas fa-location-dot w-6 h-6"></i></div>
               <div>
-                <h3 class="text-lg font-semibold text-gray-800">Our Address</h3>
-                <p class="text-gray-600 mt-1">Epic Mall, North 90th, Fifth Settlement, First Floor
-</p>
+                <h3 class="text-lg font-semibold text-gray-800">{{ $settings['address_title'] }}</h3>
+                <p class="text-gray-600 mt-1">{!! nl2br(e($settings['address_content'])) !!}</p>
               </div>
             </div>
+            @endif
 
+            @if(isset($settings['email_title'], $settings['email_content']) && $settings['email_content'])
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-4">
               <div class="flex-shrink-0 bg-orange-500/10 p-3 rounded-lg text-orange-500"><i class="fas fa-envelope w-6 h-6"></i></div>
               <div>
-                <h3 class="text-lg font-semibold text-gray-800">Email Us</h3>
-                <a href="mailto:info@tgdevelopments.com" class="text-gray-600 hover:text-orange-500 transition mt-1 block">info@tgdevelopments.com</a>
+                <h3 class="text-lg font-semibold text-gray-800">{{ $settings['email_title'] }}</h3>
+                <a href="mailto:{{ $settings['email_content'] }}" class="text-gray-600 hover:text-orange-500 transition mt-1 block">{{ $settings['email_content'] }}</a>
               </div>
             </div>
+            @endif
 
+            @if(isset($settings['phone_title'], $settings['phone_content']) && $settings['phone_content'])
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-4">
               <div class="flex-shrink-0 bg-orange-500/10 p-3 rounded-lg text-orange-500"><i class="fas fa-phone w-6 h-6"></i></div>
               <div>
-                <h3 class="text-lg font-semibold text-gray-800">Call Us</h3>
-                <a href="tel:+16497" class="text-gray-600 hover:text-orange-500 transition mt-1 block">+16497</a>
+                <h3 class="text-lg font-semibold text-gray-800">{{ $settings['phone_title'] }}</h3>
+                <a href="tel:{{ $settings['phone_content'] }}" class="text-gray-600 hover:text-orange-500 transition mt-1 block">{{ $settings['phone_content'] }}</a>
               </div>
             </div>
+            @endif
           </div>
         </div>
 
+        @if(isset($settings['map_embed_url']) && $settings['map_embed_url'])
         <div class="h-64 md:h-96 w-full rounded-2xl overflow-hidden shadow-2xl">
-          <iframe class="w-full h-full" src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3454.305810042109!2d31.480805600000004!3d30.0280833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzDCsDAxJzQxLjEiTiAzMcKwMjgnNTAuOSJF!5e0!3m2!1sen!2seg!4v1727790997741!5m2!1sen!2seg" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <iframe class="w-full h-full" src="{{ $settings['map_embed_url'] }}" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
+        @else
+        <div class="h-64 md:h-96 w-full rounded-2xl overflow-hidden shadow-2xl bg-gray-100 flex items-center justify-center">
+          <div class="text-center text-gray-500">
+            <i class="fas fa-map-marker-alt text-4xl mb-4"></i>
+            <p>Map will appear here when configured</p>
+          </div>
+        </div>
+        @endif
       </div>
 
     </div>

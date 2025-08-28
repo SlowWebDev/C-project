@@ -85,11 +85,11 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="admin-table-cell admin-flex-center">
+                    <td colspan="5" class="admin-table-cell">
                         <div class="admin-empty-state">
-                            <i class="fas fa-folder-open"></i>
-                            <p class="title">No Projects Found</p>
-                            <p class="description">Start by adding your first project</p>
+                            <i class="fas fa-folder-open admin-empty-icon"></i>
+                            <p class="admin-empty-title">No Projects Found</p>
+                            <p class="admin-empty-description">Start by adding your first project</p>
                         </div>
                     </td>
                 </tr>

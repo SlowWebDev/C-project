@@ -4,19 +4,33 @@
       
       <!-- Text Side -->
       <div class="p-12 flex flex-col justify-center" data-aos="fade-right">
-        <h2 class="text-[40px] font-bold mb-6">CEO Message</h2>
+        <h2 class="text-[40px] font-bold mb-6">{{ $settings['ceo_title'] ?? 'CEO Message' }}</h2>
         <p class="text-gray-600 leading-relaxed">
-          At TG Developments, our journey has been shaped by over 20 years of dedicated service in the real estate industry. Throughout this time, we have grown and evolved, always with a focus on delivering high-quality, innovative projects that enhance the communities we touch.
+          {{ $settings['ceo_message'] ?? 'At TG Developments, our journey has been shaped by over 20 years of dedicated service in the real estate industry. Throughout this time, we have grown and evolved, always with a focus on delivering high-quality, innovative projects that enhance the communities we touch.' }}
         </p>
+        @if(isset($settings['ceo_name']) && $settings['ceo_name'])
+        <div class="mt-6">
+          <p class="font-bold text-lg">{{ $settings['ceo_name'] }}</p>
+          <p class="text-gray-500">{{ $settings['ceo_position'] ?? 'CEO' }}</p>
+        </div>
+        @endif
       </div>
 
       <!-- Image Side -->
       <div class="min-h-[400px] md:min-h-[600px] h-full relative" data-aos="fade-left">
+        @if(isset($settings['ceo_image']) && $settings['ceo_image'])
+        <img 
+          src="{{ asset('storage/' . $settings['ceo_image']) }}" 
+          class="absolute inset-0 h-full w-full object-cover md:rounded-none rounded-b-[50px]"
+          alt="{{ $settings['ceo_name'] ?? 'CEO' }} - IMG"
+        >
+        @else
         <img 
           src="{{asset('assets/images/home/ceo-message/ceo-img.jpeg')}}" 
           class="absolute inset-0 h-full w-full object-cover md:rounded-none rounded-b-[50px]"
           alt="CEO - IMG"
         >
+        @endif
       </div>
 
     </div>

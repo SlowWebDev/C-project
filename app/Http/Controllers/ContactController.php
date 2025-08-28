@@ -5,12 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Contact;
 use App\Models\Project;
+use App\Models\Setting;
 
 class ContactController extends Controller
 {
     public function index()
     {
-        return view('pages.contact');
+        $contactSettings = [
+            'contact_title' => Setting::get('contact_information_title', 'Contact Information'),
+            'address_title' => Setting::get('contact_address_title', 'Our Address'),
+            'address_content' => Setting::get('contact_address_content', ''),
+            'email_title' => Setting::get('contact_email_title', 'Email Us'),
+            'email_content' => Setting::get('contact_email_content', ''),
+            'phone_title' => Setting::get('contact_phone_title', 'Call Us'),
+            'phone_content' => Setting::get('contact_phone_content', ''),
+            'map_embed_url' => Setting::get('contact_map_embed_url', ''),
+        ];
+
+        return view('pages.contact', compact('contactSettings'));
     }
 
     public function store(Request $request)

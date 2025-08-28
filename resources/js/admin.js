@@ -1,7 +1,7 @@
 /**
- * Admin Panel JavaScript
- * 
+ * Admin Panel JavaScript 
  * @author SlowWebDev
+
  */
 
 import Toastify from 'toastify-js';
@@ -11,8 +11,11 @@ import '@fortawesome/fontawesome-free/css/all.css';
 /* ===== CONSTANTS ===== */
 const CONFIG = {
     TOAST_DURATION: 3000,
-    MAX_FILE_SIZE: 2 * 1024 * 1024, // 2MB
+    MAX_FILE_SIZE: 2 * 1024 * 1024,
+    MAX_PDF_SIZE: 10 * 1024 * 1024,
+    MAX_HERO_IMAGE_SIZE: 5 * 1024 * 1024,
     ALLOWED_IMAGE_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+    ALLOWED_PDF_TYPES: ['application/pdf'],
     API_ENDPOINTS: {
         UPLOAD_LOGO: '/admin/settings/logo'
     },
@@ -21,6 +24,10 @@ const CONFIG = {
         FILE_INPUT: 'input[type="file"]',
         RICH_EDITOR: '.rich-editor',
         ADMIN_FILE_INPUT: '.admin-file-input'
+    },
+    ANIMATION: {
+        DURATION: 300,
+        EASING: 'ease-in-out'
     }
 };
 
@@ -243,6 +250,71 @@ class ImagePreviewManager {
         this.selectedGalleryFiles = [];
         this.updateGalleryPreview();
         ['image', 'gallery'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    }
+}
+
+/* ===== DROPDOWN MANAGER ===== */
+class DropdownManager {
+    constructor() {
+        this.dropdowns = document.querySelectorAll('.admin-dropdown');
+    }
+
+    initialize() {
+        this.setupEventListeners();
+        console.log('Dropdown Manager initialized');
+    }
+
+    setupEventListeners() {
+        this.dropdowns.forEach(dropdown => {
+            const trigger = dropdown.querySelector('.admin-dropdown-trigger');
+            const content = dropdown.querySelector('.admin-dropdown-content');
+            
+            if (trigger && content) {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.toggleDropdown(trigger, content);
+                });
+            }
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.admin-dropdown')) {
+                this.closeAllDropdowns();
+            }
+        });
+    }
+
+    toggleDropdown(trigger, content) {
+        const isOpen = content.classList.contains('open');
+        
+        // Close all other dropdowns first
+        this.closeAllDropdowns();
+        
+        if (!isOpen) {
+            this.openDropdown(trigger, content);
+        }
+    }
+
+    openDropdown(trigger, content) {
+        trigger.classList.add('active');
+        content.classList.add('open');
+    }
+
+    closeDropdown(trigger, content) {
+        trigger.classList.remove('active');
+        content.classList.remove('open');
+    }
+
+    closeAllDropdowns() {
+        this.dropdowns.forEach(dropdown => {
+            const trigger = dropdown.querySelector('.admin-dropdown-trigger');
+            const content = dropdown.querySelector('.admin-dropdown-content');
+            
+            if (trigger && content) {
+                this.closeDropdown(trigger, content);
+            }
+        });
     }
 }
 
@@ -570,6 +642,10 @@ class AdminPanel {
     static initialize() {
         try {
             UIManager.initialize();
+            
+            // Initialize dropdown manager
+            window.dropdownManager = new DropdownManager();
+            window.dropdownManager.initialize();
 
             EditorManager.initialize();
             FileUploadManager.initialize();
@@ -654,3 +730,112 @@ window.AdminPanel = {
 // Global functions for backward compatibility
 window.toggleMessage = MessageUtils.toggleMessage;
 window.toggleFooterSettings = FooterManager.toggleSettings;
+
+// ===== UNIVERSAL FILE HANDLERS =====
+window.previewImage = function(input, previewId) {
+    if (!input.files || !input.files[0]) return;
+    
+    const file = input.files[0];
+    const previewContainer = document.getElementById(previewId);
+    if (!previewContainer) return;
+    
+    // Validate file using existing system
+    if (!FileUploadManager.validateFile(file)) {
+        input.value = '';
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        previewContainer.innerHTML = `
+            <div class="admin-preview-container mt-4">
+                <img src="${e.target.result}" alt="Preview" class="admin-preview-image opacity-0 transition-opacity duration-300">
+                <button type="button" class="admin-remove-btn" onclick="clearPreview('${input.id}', '${previewId}')">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="mt-2">
+                    <span class="text-sm text-gray-400 block">New image preview</span>
+                    <span class="text-xs text-gray-500">${file.name} • ${(file.size / 1024 / 1024).toFixed(1)}MB</span>
+                </div>
+            </div>
+        `;
+        
+        // Fade in effect
+        const img = previewContainer.querySelector('img');
+        setTimeout(() => img.classList.remove('opacity-0'), 50);
+    };
+    
+    reader.onerror = () => ToastManager.error('Error reading file');
+    reader.readAsDataURL(file);
+};
+
+window.clearPreview = function(inputId, previewId) {
+    const input = document.getElementById(inputId);
+    const previewContainer = document.getElementById(previewId);
+    
+    if (input) input.value = '';
+    if (previewContainer) previewContainer.innerHTML = '';
+    
+    ToastManager.warning('Image removed');
+};
+
+window.previewFile = function(input, previewId) {
+    if (!input.files || !input.files[0]) return;
+    
+    const file = input.files[0];
+    const container = document.getElementById(previewId);
+    if (!container) return;
+    
+    // PDF validation
+    if (file.type !== 'application/pdf') {
+        ToastManager.error('Please select a valid PDF file');
+        input.value = '';
+        return;
+    }
+    
+    if (file.size > CONFIG.MAX_PDF_SIZE) {
+        ToastManager.error(`PDF size must be less than ${(CONFIG.MAX_PDF_SIZE / 1024 / 1024).toFixed(1)}MB`);
+        input.value = '';
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="mt-4 p-4 bg-gray-700 rounded-lg border border-gray-600 transform transition-all duration-200">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-file-pdf text-red-400 text-2xl"></i>
+                <div class="flex-1">
+                    <p class="text-white font-medium">${file.name}</p>
+                    <p class="text-gray-400 text-sm">${(file.size / 1024 / 1024).toFixed(1)}MB • ${new Date().toLocaleDateString()}</p>
+                </div>
+                <button type="button" onclick="clearFilePreview('${input.id}', '${previewId}')" 
+                        class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-900/20 rounded">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    `;
+};
+
+window.clearFilePreview = function(inputId, previewId) {
+    const input = document.getElementById(inputId);
+    const container = document.getElementById(previewId);
+    
+    if (input) input.value = '';
+    if (container) container.innerHTML = '';
+    
+    ToastManager.warning('File removed');
+};
+
+// ===== UNIVERSAL FORM HELPERS =====
+window.resetForm = function() {
+    if (confirm('Are you sure you want to reset all changes? This cannot be undone.')) {
+        location.reload();
+    }
+};
+
+window.scrollToSection = function(selector) {
+    const element = document.querySelector(selector);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+};

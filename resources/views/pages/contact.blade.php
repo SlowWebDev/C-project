@@ -6,6 +6,6 @@
 @section('content')
 
 <x-contact.banner />
-<x-contact.contact-us />
+<x-contact.contact-us :settings="$contactSettings" />
 
 @endsection

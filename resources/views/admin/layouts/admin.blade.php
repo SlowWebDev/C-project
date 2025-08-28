@@ -38,6 +38,56 @@
                     <span>Dashboard</span>
                 </a>
                 
+                <!-- Pages Management Dropdown -->
+                <div class="admin-dropdown">
+                    <button class="admin-dropdown-trigger flex items-center w-full px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700
+                           {{ request()->routeIs('admin.pages.*') ? 'bg-gray-700 text-white' : '' }}" data-dropdown="pages">
+                        <i class="fas fa-edit w-6 mr-3"></i>
+                        <span>Pages Management</span>
+                        <i class="fas fa-chevron-down ml-auto transition-transform duration-200"></i>
+                    </button>
+                    <div class="admin-dropdown-content" id="dropdown-pages">
+                        <a href="{{ route('admin.pages.home') }}" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4
+                                  {{ request()->routeIs('admin.pages.home') ? 'bg-gray-600 text-white' : '' }}">
+                            <i class="fas fa-home w-4 mr-3"></i>
+                            <span>Home Page</span>
+                        </a>
+                        <a href="{{ route('admin.pages.about') }}" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4
+                                  {{ request()->routeIs('admin.pages.about') ? 'bg-gray-600 text-white' : '' }}">
+                            <i class="fas fa-info-circle w-4 mr-3"></i>
+                            <span>About Page</span>
+                        </a>
+                        <a href="{{ route('admin.pages.contact') }}" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4
+                                  {{ request()->routeIs('admin.pages.contact') ? 'bg-gray-600 text-white' : '' }}">
+                            <i class="fas fa-envelope w-4 mr-3"></i>
+                            <span>Contact Page</span>
+                        </a>
+                        <hr class="border-gray-600 my-2 mx-4">
+                        <div class="px-4 py-1 text-xs text-gray-500 uppercase tracking-wider">Preview Pages</div>
+                        <a href="{{ route('home') }}" target="_blank" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4">
+                            <i class="fas fa-home w-4 mr-3"></i>
+                            <span>View Home</span>
+                            <i class="fas fa-external-link-alt ml-auto text-xs"></i>
+                        </a>
+                        <a href="{{ route('about') }}" target="_blank" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4">
+                            <i class="fas fa-info-circle w-4 mr-3"></i>
+                            <span>View About</span>
+                            <i class="fas fa-external-link-alt ml-auto text-xs"></i>
+                        </a>
+                        <a href="{{ route('contact.index') }}" target="_blank" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4">
+                            <i class="fas fa-envelope w-4 mr-3"></i>
+                            <span>View Contact</span>
+                            <i class="fas fa-external-link-alt ml-auto text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+                
                 <a href="{{ route('admin.projects.index') }}" 
                    class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700
                           {{ request()->routeIs('admin.projects.*') ? 'bg-gray-700 text-white border-r-4 border-blue-500' : '' }}">

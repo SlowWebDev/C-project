@@ -7,6 +7,6 @@
 @section('content')
 
 <x-about.banner />
-<x-about.about-us />
+<x-about.about-us :settings="$aboutSettings" />
 
 @endsection

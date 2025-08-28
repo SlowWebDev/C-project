@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\MediaController as AdminMediaController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\CareerController as AdminCareerController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\PagesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +79,16 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     Route::get('/settings/careers', [SettingsController::class, 'showCareersSettings'])->name('settings.careers');
     Route::post('/settings/careers', [SettingsController::class, 'updateCareersImages'])->name('settings.careers.update');
     Route::post('/settings/footer', [SettingsController::class, 'updateFooter'])->name('settings.footer');
+    
+    // Page Management Routes
+    Route::prefix('pages')->name('pages.')->group(function () {
+        Route::get('/home', [PagesController::class, 'home'])->name('home');
+        Route::put('/home', [PagesController::class, 'updateHome'])->name('home.update');
+        Route::get('/about', [PagesController::class, 'about'])->name('about');
+        Route::put('/about', [PagesController::class, 'updateAbout'])->name('about.update');
+        Route::get('/contact', [PagesController::class, 'contact'])->name('contact');
+        Route::put('/contact', [PagesController::class, 'updateContact'])->name('contact.update');
+    });
     
     // Projects Management
     Route::resource('projects', AdminProjectController::class);

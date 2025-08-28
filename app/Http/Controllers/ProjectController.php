@@ -21,7 +21,7 @@ class ProjectController extends Controller
                         'title' => $project->title,
                         'description' => $project->description,
                         'image' => Storage::url($project->image),
-                        'Addres' => $project->address ?? 'Location Not Available',
+                        'Address' => $project->address ?? 'Location Not Available',
                         'link' => route('projects.show', $project->slug)
                     ];
                 }),
@@ -34,7 +34,7 @@ class ProjectController extends Controller
                         'title' => $project->title,
                         'description' => $project->description,
                         'image' => Storage::url($project->image),
-                        'Addres' => $project->address ?? 'Location Not Available',
+                        'Address' => $project->address ?? 'Location Not Available',
                         'link' => route('projects.show', $project->slug)
                     ];
                 })
