@@ -205,4 +205,37 @@ class SettingsController extends Controller
     {
         return asset('storage/logos/' . $filename) . '?t=' . time();
     }
+
+    /**
+     * Update footer settings
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateFooter(Request $request)
+    {
+        $validated = $request->validate([
+            'footer_description' => 'required|string|max:500',
+            'copyright_text' => 'required|string|max:100',
+            'facebook_url' => 'nullable|url|max:255',
+            'instagram_url' => 'nullable|url|max:255',
+            'linkedin_url' => 'nullable|url|max:255',
+            'tiktok_url' => 'nullable|url|max:255',
+            'whatsapp_url' => 'nullable|url|max:255',
+        ]);
+
+        // Update footer content
+        Setting::set('footer_description', $validated['footer_description']);
+        Setting::set('copyright_text', $validated['copyright_text']);
+        
+        // Update social media links
+        Setting::set('social_facebook', $validated['facebook_url']);
+        Setting::set('social_instagram', $validated['instagram_url']);
+        Setting::set('social_linkedin', $validated['linkedin_url']);
+        Setting::set('social_tiktok', $validated['tiktok_url']);
+        Setting::set('social_whatsapp', $validated['whatsapp_url']);
+
+        return redirect()->route('admin.dashboard')
+            ->with('success', 'Footer settings updated successfully!');
+    }
 }

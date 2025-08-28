@@ -77,6 +77,7 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     Route::get('/settings/logos', [SettingsController::class, 'getLogos'])->name('settings.logos');
     Route::get('/settings/careers', [SettingsController::class, 'showCareersSettings'])->name('settings.careers');
     Route::post('/settings/careers', [SettingsController::class, 'updateCareersImages'])->name('settings.careers.update');
+    Route::post('/settings/footer', [SettingsController::class, 'updateFooter'])->name('settings.footer');
     
     // Projects Management
     Route::resource('projects', AdminProjectController::class);

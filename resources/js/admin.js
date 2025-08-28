@@ -621,14 +621,36 @@ class MessageUtils {
     }
 }
 
+/* ===== FOOTER SETTINGS MANAGER ===== */
+class FooterManager {
+    static toggleSettings() {
+        const content = document.getElementById('footer-settings-content');
+        const icon = document.getElementById('footer-toggle-icon');
+        
+        if (content && icon) {
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+    }
+}
+
 /* ===== EXPORT FOR EXTERNAL USE ===== */
 window.AdminPanel = {
     toast: ToastManager,
     fileUpload: FileUploadManager,
     imagePreview: ImagePreviewManager,
     contact: ContactManager,
-    message: MessageUtils
+    message: MessageUtils,
+    footer: FooterManager
 };
 
-// Global function for backward compatibility
+// Global functions for backward compatibility
 window.toggleMessage = MessageUtils.toggleMessage;
+window.toggleFooterSettings = FooterManager.toggleSettings;

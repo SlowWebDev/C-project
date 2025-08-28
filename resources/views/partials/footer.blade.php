@@ -18,8 +18,7 @@
      data-logo-type="logo-footer">
 
                 <p class="text-gray-600 text-sm leading-relaxed max-w-sm">
-                    The company's extensive experience and focus on quality and innovation,
-                    position it as a leading player in the development and investment sector.
+                    {{ \App\Models\Setting::get('footer_description', 'The company\'s extensive experience and focus on quality and innovation, position it as a leading player in the development and investment sector.') }}
                 </p>
             </div>
 
@@ -56,16 +55,26 @@
 
         <!-- Social Media -->
         <div class="footer-social">
-            <a href="/" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
-            <a href="/" class="footer-social-link"><i class="fab fa-instagram"></i></a>
-            <a href="/" class="footer-social-link"><i class="fab fa-linkedin-in"></i></a>
-            <a href="/" class="footer-social-link"><i class="fab fa-tiktok"></i></a>
-            <a href="/" class="footer-social-link"><i class="fab fa-whatsapp"></i></a>
+            @if($facebookUrl = \App\Models\Setting::get('social_facebook'))
+                <a href="{{ $facebookUrl }}" target="_blank" rel="noopener" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
+            @endif
+            @if($instagramUrl = \App\Models\Setting::get('social_instagram'))
+                <a href="{{ $instagramUrl }}" target="_blank" rel="noopener" class="footer-social-link"><i class="fab fa-instagram"></i></a>
+            @endif
+            @if($linkedinUrl = \App\Models\Setting::get('social_linkedin'))
+                <a href="{{ $linkedinUrl }}" target="_blank" rel="noopener" class="footer-social-link"><i class="fab fa-linkedin-in"></i></a>
+            @endif
+            @if($tiktokUrl = \App\Models\Setting::get('social_tiktok'))
+                <a href="{{ $tiktokUrl }}" target="_blank" rel="noopener" class="footer-social-link"><i class="fab fa-tiktok"></i></a>
+            @endif
+            @if($whatsappUrl = \App\Models\Setting::get('social_whatsapp'))
+                <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener" class="footer-social-link"><i class="fab fa-whatsapp"></i></a>
+            @endif
         </div>
 
         <!-- Copyright -->
         <div class="text-center text-gray-600 border-t border-gray-300 pt-4 mt-8">
-            All Copyrights for ©1SLOW
+            {{ \App\Models\Setting::get('copyright_text', 'All Copyrights for ©1SLOW') }}
         </div>
     </div>
 </footer>

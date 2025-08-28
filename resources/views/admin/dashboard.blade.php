@@ -101,6 +101,124 @@
         </div>
     </div>
 
+    <!-- Footer Settings Section -->
+    <div class="admin-card mb-8">
+        <div class="admin-flex-between mb-2">
+            <h2 class="text-xl font-semibold text-white">Footer Settings</h2>
+            <button onclick="toggleFooterSettings()" class="admin-btn-secondary" id="footer-toggle-btn">
+                <i class="fas fa-chevron-down" id="footer-toggle-icon"></i>
+                <span>Toggle Settings</span>
+            </button>
+        </div>
+        
+        <div id="footer-settings-content" class="hidden mt-6">
+            <form action="{{ route('admin.settings.footer') }}" method="POST" class="space-y-6">
+                @csrf
+                
+                <!-- Footer Content Section -->
+                <div class="bg-gray-700/50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <h3 class="text-lg font-semibold text-white flex items-center">
+                            <i class="fas fa-align-left mr-2 text-blue-400"></i>
+                            Footer Content
+                        </h3>
+                    </div>
+                    <div class="space-y-4">
+                        <!-- Footer Description -->
+                        <div>
+                            <label for="footer_description" class="block text-sm font-medium text-gray-300 mb-2">
+                                Company Description
+                            </label>
+                            <textarea id="footer_description" name="footer_description" rows="3" 
+                                      class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                      placeholder="Company description text that appears in footer...">{{ \App\Models\Setting::get('footer_description', 'The company\'s extensive experience and focus on quality and innovation, position it as a leading player in the development and investment sector.') }}</textarea>
+                        </div>
+                        
+                        <!-- Copyright Text -->
+                        <div>
+                            <label for="copyright_text" class="block text-sm font-medium text-gray-300 mb-2">
+                                Copyright Text
+                            </label>
+                            <input type="text" id="copyright_text" name="copyright_text" 
+                                   class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="All Copyrights for ©1SLOW"
+                                   value="{{ \App\Models\Setting::get('copyright_text', 'All Copyrights for ©1SLOW') }}">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Social Media Section -->
+                <div class="bg-gray-700/50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <h3 class="text-lg font-semibold text-white flex items-center">
+                            <i class="fas fa-share-alt mr-2 text-green-400"></i>
+                            Social Media Links
+                        </h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="facebook_url" class="block text-sm font-medium text-gray-300 mb-2">
+                                <i class="fab fa-facebook-f text-blue-500 mr-2"></i>Facebook URL
+                            </label>
+                            <input type="url" id="facebook_url" name="facebook_url" 
+                                   class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="https://facebook.com/yourpage"
+                                   value="{{ \App\Models\Setting::get('social_facebook') }}">
+                        </div>
+                        
+                        <div>
+                            <label for="instagram_url" class="block text-sm font-medium text-gray-300 mb-2">
+                                <i class="fab fa-instagram text-pink-500 mr-2"></i>Instagram URL
+                            </label>
+                            <input type="url" id="instagram_url" name="instagram_url" 
+                                   class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="https://instagram.com/yourpage"
+                                   value="{{ \App\Models\Setting::get('social_instagram') }}">
+                        </div>
+                        
+                        <div>
+                            <label for="linkedin_url" class="block text-sm font-medium text-gray-300 mb-2">
+                                <i class="fab fa-linkedin-in text-blue-600 mr-2"></i>LinkedIn URL
+                            </label>
+                            <input type="url" id="linkedin_url" name="linkedin_url" 
+                                   class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="https://linkedin.com/company/yourcompany"
+                                   value="{{ \App\Models\Setting::get('social_linkedin') }}">
+                        </div>
+                        
+                        <div>
+                            <label for="tiktok_url" class="block text-sm font-medium text-gray-300 mb-2">
+                                <i class="fab fa-tiktok text-gray-400 mr-2"></i>TikTok URL
+                            </label>
+                            <input type="url" id="tiktok_url" name="tiktok_url" 
+                                   class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="https://tiktok.com/@yourpage"
+                                   value="{{ \App\Models\Setting::get('social_tiktok') }}">
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label for="whatsapp_url" class="block text-sm font-medium text-gray-300 mb-2">
+                                <i class="fab fa-whatsapp text-green-500 mr-2"></i>WhatsApp URL
+                            </label>
+                            <input type="url" id="whatsapp_url" name="whatsapp_url" 
+                                   class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="https://wa.me/yourphonenumber"
+                                   value="{{ \App\Models\Setting::get('social_whatsapp') }}">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-end pt-4 border-t border-gray-600">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center">
+                        <i class="fas fa-save mr-2"></i>
+                        Update Footer Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Recent Activity Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Recent Projects -->
