@@ -39,7 +39,7 @@ class CareerController extends Controller
 
     public function store(Request $request)
     {
-        if (Job::count() >= 5) {
+        if (Job::count() >= 2) {
             return redirect()->route('admin.careers.index')
                            ->with('error', 'Maximum number of job positions (2) has been reached.');
         }
@@ -129,13 +129,8 @@ class CareerController extends Controller
         }
     }
 
-    public function updateBanner(Request $request)
-    {
-    }
-
     public function showApplication(JobApplication $application)
     {
-        // التوجيه لصفحة الـ careers الأساسية مع تمييز الطلب
         return redirect()->route('admin.careers.index', ['highlight' => $application->id])
             ->with('info', 'Application for ' . $application->first_name . ' ' . $application->last_name);
     }

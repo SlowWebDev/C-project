@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\CareerController as AdminCareerController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\PagesController;
+use App\Http\Controllers\Admin\SecurityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +72,7 @@ Route::middleware(['web', 'guest'])->group(function () {
 | Admin Panel Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', 'security', 'track.activity'])->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
@@ -125,5 +126,20 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
             Route::get('/{application}/cv', [AdminCareerController::class, 'downloadCV'])->name('download-cv');
             Route::patch('/{application}/status', [AdminCareerController::class, 'updateStatus'])->name('status');
         });
+    });
+    
+    // Security Management Routes
+    Route::prefix('security')->name('security.')->group(function () {
+        Route::get('/', [SecurityController::class, 'overview'])->name('overview');
+        Route::patch('/password', [SecurityController::class, 'updatePassword'])->name('update-password');
+        Route::patch('/email', [SecurityController::class, 'updateEmail'])->name('update-email');
+        Route::get('/activity-logs', [SecurityController::class, 'activityLogs'])->name('activity-logs');
+        Route::get('/security-events', [SecurityController::class, 'securityEvents'])->name('security-events');
+        Route::get('/device-management', [SecurityController::class, 'deviceManagement'])->name('device-management');
+        Route::patch('/devices/{device}/block', [SecurityController::class, 'blockDevice'])->name('device-block');
+        Route::patch('/devices/{device}/unblock', [SecurityController::class, 'unblockDevice'])->name('device-unblock');
+        Route::patch('/devices/{device}/trust', [SecurityController::class, 'trustDevice'])->name('device-trust');
+        Route::patch('/devices/{device}/untrust', [SecurityController::class, 'untrustDevice'])->name('device-untrust');
+        Route::get('/settings', [SecurityController::class, 'settings'])->name('settings');
     });
 });

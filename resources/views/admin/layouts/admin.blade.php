@@ -115,6 +115,50 @@
                     <i class="fas fa-briefcase w-6 mr-3"></i>
                     <span>Careers</span>
                 </a>
+                
+                <!-- Security Dropdown -->
+                <div class="admin-dropdown">
+                    <button class="admin-dropdown-trigger flex items-center w-full px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700
+                           {{ request()->routeIs('admin.security.*') ? 'bg-gray-700 text-white' : '' }}" data-dropdown="security">
+                        <i class="fas fa-shield-alt w-6 mr-3"></i>
+                        <span>Security</span>
+                        <i class="fas fa-chevron-down ml-auto transition-transform duration-200"></i>
+                    </button>
+                    <div class="admin-dropdown-content" id="dropdown-security">
+                        <a href="{{ route('admin.security.overview') }}" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4
+                                  {{ request()->routeIs('admin.security.overview') ? 'bg-gray-600 text-white' : '' }}">
+                            <i class="fas fa-shield-alt w-4 mr-3"></i>
+                            <span>Security Center</span>
+                        </a>
+                        <a href="{{ route('admin.security.device-management') }}" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4
+                                  {{ request()->routeIs('admin.security.device-management') ? 'bg-gray-600 text-white' : '' }}">
+                            <i class="fas fa-laptop w-4 mr-3"></i>
+                            <span >Devices</span>
+                        </a>
+                        <a href="{{ route('admin.security.activity-logs') }}" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4
+                                  {{ request()->routeIs('admin.security.activity-logs') ? 'bg-gray-600 text-white' : '' }}">
+                            <i class="fas fa-history w-4 mr-3"></i>
+                            <span>Activity Logs</span>
+                        </a>
+                        <a href="{{ route('admin.security.security-events') }}" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4
+                                  {{ request()->routeIs('admin.security.security-events') ? 'bg-gray-600 text-white' : '' }}">
+                            <i class="fas fa-exclamation-triangle w-4 mr-3"></i>
+                            <span>Security Events</span>
+                        </a>
+                        @if(auth()->id() === 1)
+                        <a href="{{ route('admin.security.settings') }}" 
+                           class="flex items-center px-4 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors ml-4
+                                  {{ request()->routeIs('admin.security.settings') ? 'bg-gray-600 text-white' : '' }}">
+                            <i class="fas fa-cog w-4 mr-3"></i>
+                            <span>Security Settings</span>
+                        </a>
+                        @endif
+                    </div>
+                </div>
             </nav>
 
             <!-- User Menu -->
