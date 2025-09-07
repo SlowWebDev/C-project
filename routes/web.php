@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\CareerController as AdminCareerController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\Admin\SecurityController;
+use App\Http\Controllers\Admin\TwoFactorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +51,7 @@ Route::post('/contact', [ContactController::class, 'store'])
 // Project 
 Route::post('/projects/{project}/inquiry', [ContactController::class, 'storeProjectInquiry'])
     ->name('project.inquiry')
-    ->middleware('throttle:3,10'); 
+    ->middleware('throttle:3,10');
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +65,24 @@ Route::get('login', function() {
 
 Route::middleware(['web', 'guest'])->group(function () {
     Route::get('admin/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('admin/login', [LoginController::class, 'login'])->name('admin.login.submit');
+    Route::post('admin/login', [LoginController::class, 'login'])
+        ->name('admin.login.submit')
+        ->middleware('throttle:5,1');
+    Route::post('admin/register', [LoginController::class, 'register'])
+        ->name('admin.register')
+        ->middleware('throttle:3,1');
+});
+
+// 2FA Routes (require authentication but not full 2FA verification)
+Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(function () {
+    Route::get('2fa/setup', [TwoFactorController::class, 'setup'])->name('2fa.setup');
+    Route::post('2fa/verify', [TwoFactorController::class, 'verify'])
+        ->name('2fa.verify')
+        ->middleware('throttle:5,1');
+    Route::get('2fa/verify', [TwoFactorController::class, 'showVerify'])->name('2fa.show-verify');
+    Route::post('2fa/verify-code', [TwoFactorController::class, 'processVerify'])
+        ->name('2fa.process-verify')
+        ->middleware('throttle:10,1');
 });
 
 /*
@@ -72,7 +90,7 @@ Route::middleware(['web', 'guest'])->group(function () {
 | Admin Panel Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', 'security', 'track.activity'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', '2fa', 'security', 'track.activity'])->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
@@ -131,8 +149,12 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', 'security', '
     // Security Management Routes
     Route::prefix('security')->name('security.')->group(function () {
         Route::get('/', [SecurityController::class, 'overview'])->name('overview');
-        Route::patch('/password', [SecurityController::class, 'updatePassword'])->name('update-password');
-        Route::patch('/email', [SecurityController::class, 'updateEmail'])->name('update-email');
+    Route::patch('/password', [SecurityController::class, 'updatePassword'])
+        ->name('update-password')
+        ->middleware('throttle:3,5');
+    Route::patch('/email', [SecurityController::class, 'updateEmail'])
+        ->name('update-email')
+        ->middleware('throttle:2,10');
         Route::get('/activity-logs', [SecurityController::class, 'activityLogs'])->name('activity-logs');
         Route::get('/security-events', [SecurityController::class, 'securityEvents'])->name('security-events');
         Route::get('/device-management', [SecurityController::class, 'deviceManagement'])->name('device-management');
