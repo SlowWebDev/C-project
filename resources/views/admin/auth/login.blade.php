@@ -1,68 +1,144 @@
 @extends('admin.layouts.auth')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4">
-    <div class="max-w-md w-full space-y-8">
-        <div class="text-center">
-            <div class="mx-auto h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center mb-6">
-                <i class="fas fa-lock text-2xl text-white"></i>
+<div class="min-h-screen flex flex-col lg:flex-row">
+    @php
+        $noUsers = \App\Models\User::count() === 0;
+    @endphp
+    
+    <div class="flex-1 lg:flex-none lg:w-1/2 flex items-center justify-center px-8 py-16 bg-auth-left">
+        <div class="w-full max-w-md space-y-8">
+            <div class="text-center">
+                <h1 class="text-white font-extralight text-3xl lg:text-4xl tracking-wide mb-4">
+                    {{ $noUsers ? 'System Setup' : 'Welcome back' }}
+                </h1>
+                <p class="text-gray-400 text-base leading-relaxed font-light">
+                    {{ $noUsers ? 'Create your administrator account to get started with managing your website' : 'Sign in to access your dashboard' }}
+                </p>
             </div>
-            <h2 class="text-3xl font-bold text-white mb-2">Admin Login</h2>
-            <p class="text-gray-400">Sign in to access the dashboard</p>
-        </div>
-        
-        <div class="bg-gray-800 rounded-xl p-8 border border-gray-700">
-            <form action="{{ route('admin.login.submit') }}" method="POST" class="space-y-6">
-                @csrf
-                
-                <div class="space-y-4">
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
-                        <input id="email" name="email" type="email" required 
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" 
-                               placeholder="Enter your email"
-                               value="{{ old('email') }}">
-                        @error('email')
-                            <p class="mt-1 text-sm text-red-400 flex items-center gap-1">
-                                <i class="fas fa-exclamation-circle"></i>
-                                {{ $message }}
-                            </p>
-                        @enderror
-                    </div>
+            
+            @if(session('error'))
+                <div class="p-4 bg-red-500/10 border border-red-500/30 rounded-lg backdrop-blur-sm">
+                    <p class="text-sm text-red-200">{{ session('error') }}</p>
+                </div>
+            @endif
+            
+            @if(session('success'))
+                <div class="p-4 bg-green-500/10 border border-green-500/30 rounded-lg backdrop-blur-sm">
+                    <p class="text-sm text-green-200">{{ session('success') }}</p>
+                </div>
+            @endif
+            
+            @if(session('warning'))
+                <div class="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg backdrop-blur-sm">
+                    <p class="text-sm text-yellow-200">{{ $message }}</p>
+                </div>
+            @endif
+
+            @if($noUsers)
+                <form action="{{ route('admin.register') }}" method="POST" class="space-y-6">
+                    @csrf
                     
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
-                        <input id="password" name="password" type="password" required 
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" 
-                               placeholder="Enter your password">
-                        @error('password')
-                            <p class="mt-1 text-sm text-red-400 flex items-center gap-1">
-                                <i class="fas fa-exclamation-circle"></i>
-                                {{ $message }}
+                    <div class="space-y-4">
+                        <div>
+                            <input id="name" name="name" type="text" required 
+                                   class="w-full px-5 py-4 text-white placeholder-gray-400 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-sm backdrop-blur-sm" 
+                                   placeholder="Full Name" value="{{ old('name') }}">
+                            @error('name')
+                                <p class="mt-2 text-xs text-red-300">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        
+                        <div>
+                            <input id="email" name="email" type="email" required 
+                                   class="w-full px-5 py-4 text-white placeholder-gray-400 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-sm backdrop-blur-sm" 
+                                   placeholder="Email or Username" value="{{ old('email') }}">
+                            @error('email')
+                                <p class="mt-2 text-xs text-red-300">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        
+                        <div>
+                            <input id="password" name="password" type="password" required 
+                                   class="w-full px-5 py-4 text-white placeholder-gray-400 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-sm backdrop-blur-sm" 
+                                   placeholder="Password">
+                            @error('password')
+                                <p class="mt-2 text-xs text-red-300">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        
+                        <div>
+                            <input id="password_confirmation" name="password_confirmation" type="password" required 
+                                   class="w-full px-5 py-4 text-white placeholder-gray-400 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-sm backdrop-blur-sm" 
+                                   placeholder="Confirm Password">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 px-6 text-white font-medium bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-300 transform hover:scale-[0.99] shadow-lg">
+                        Create Account
+                    </button>
+                    
+                    <div class="text-center pt-4">
+                        <div class="px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg backdrop-blur-sm">
+                            <p class="text-xs text-blue-200 font-light">
+                                Next step: You'll configure Two-Factor Authentication for enhanced security
                             </p>
-                        @enderror
+                        </div>
+                    </div>
+                </form>
+            @else
+                <form action="{{ route('admin.login.submit') }}" method="POST" class="space-y-6">
+                    @csrf
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <input id="email" name="email" type="email" required 
+                                   class="w-full px-5 py-4 text-white placeholder-gray-400 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-sm backdrop-blur-sm"
+                                   placeholder="Email or Username" value="{{ old('email') }}">
+                            @error('email')
+                                <p class="mt-2 text-xs text-red-300">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        
+                        <div>
+                            <input id="password" name="password" type="password" required 
+                                   class="w-full px-5 py-4 text-white placeholder-gray-400 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-sm backdrop-blur-sm"
+                                   placeholder="Password">
+                            @error('password')
+                                <p class="mt-2 text-xs text-red-300">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 px-6 text-white font-medium bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-300 transform hover:scale-[0.99] shadow-lg">
+                        Sign In
+                    </button>
+                </form>
+            @endif
+        </div>
+    </div>
+    
+    <div class="flex-1 lg:flex-none lg:w-1/2 flex items-center justify-center px-8 py-16 bg-auth-right relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5"></div>
+        <div class="text-center max-w-lg relative z-10">
+            <div class="mb-12">
+                <blockquote class="text-gray-100 text-xl leading-relaxed font-light mb-6">
+                    "Setting up your admin panel for complete website management and control."
+                </blockquote>
+            </div>
+            
+            <div class="inline-flex items-center space-x-4 px-6 py-4 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
+                <div class="flex-shrink-0">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                        <img src="{{ asset('images/slow.png') }}" alt="Slow Profile" class="w-12 h-12 rounded-full object-cover">
                     </div>
                 </div>
-
-                <div class="flex items-center">
-                    <input id="remember_me" name="remember" type="checkbox" 
-                           class="h-4 w-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500">
-                    <label for="remember_me" class="ml-3 text-sm text-gray-300">
-                        Remember me for 30 days
-                    </label>
+                <div class="text-left">
+                    <div class="text-white font-medium text-base mb-1">Admin Panel</div>
+                    <div class="text-gray-300 text-sm font-light">by SlowWebDev</div>
                 </div>
-
-                <button type="submit" 
-                        class="w-full flex items-center justify-center gap-3 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>Sign In</span>
-                </button>
-            </form>
+            </div>
         </div>
-        
-        <p class="text-center text-xs text-gray-500">
-            © {{ date('Y') }} Admin Panel by 1slow. All rights reserved.
-        </p>
     </div>
 </div>
 @endsection

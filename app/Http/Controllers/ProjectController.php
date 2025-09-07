@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use App\Models\Facility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,35 +11,31 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = [
-            'commercial' => Project::where('category', 'commercial')
-                ->where('status', 'published')
-                ->latest()
-                ->get()
-                ->map(function ($project) {
-                    return [
-                        'title' => $project->title,
-                        'description' => $project->description,
-                        'image' => Storage::url($project->image),
-                        'Address' => $project->address ?? 'Location Not Available',
-                        'link' => route('projects.show', $project->slug)
-                    ];
-                }),
-            'residential' => Project::where('category', 'residential')
-                ->where('status', 'published')
-                ->latest()
-                ->get()
-                ->map(function ($project) {
-                    return [
-                        'title' => $project->title,
-                        'description' => $project->description,
-                        'image' => Storage::url($project->image),
-                        'Address' => $project->address ?? 'Location Not Available',
-                        'link' => route('projects.show', $project->slug)
-                    ];
-                })
+            'commercial' => $this->getProjectsByCategory('commercial'),
+            'residential' => $this->getProjectsByCategory('residential')
         ];
 
         return view('pages.projects', compact('projects'));
+    }
+
+    /**
+     * Get projects by category with formatted data
+     */
+    private function getProjectsByCategory(string $category)
+    {
+        return Project::where('category', $category)
+            ->where('status', 'published')
+            ->latest()
+            ->get()
+            ->map(function ($project) {
+                return [
+                    'title' => $project->title,
+                    'description' => $project->description,
+                    'image' => Storage::url($project->image),
+                    'Address' => $project->address ?? 'Location Not Available',
+                    'link' => route('projects.show', $project->slug)
+                ];
+            });
     }
 
     public function show($slug)

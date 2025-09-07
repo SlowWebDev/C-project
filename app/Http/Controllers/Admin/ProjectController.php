@@ -24,7 +24,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('admin.projects.create');
+        $availableFacilities = Project::getAvailableFacilities();
+        return view('admin.projects.create', compact('availableFacilities'));
     }
 
     /**
@@ -41,17 +42,33 @@ class ProjectController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'facilities' => 'nullable|array',
-            'facilities.*' => 'exists:facilities,id',
+            'facilities.*' => 'string|max:255',
             'status' => 'required|in:draft,published'
         ]);
 
         try {
-            // Generate slug from title
-            $validatedData['slug'] = Str::slug($validatedData['title']);
+            // Generate unique slug from title
+            $baseSlug = Str::slug($validatedData['title']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Project::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $validatedData['slug'] = $slug;
 
-            // Handle main image
+            // Handle main image with validation
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('projects', 'public');
+                $image = $request->file('image');
+                
+                // Additional image validation
+                if (!$image->isValid()) {
+                    throw new \Exception('Uploaded image is corrupted or invalid.');
+                }
+                
+                $path = $image->store('projects', 'public');
                 $validatedData['image'] = $path;
             }
 
@@ -66,16 +83,25 @@ class ProjectController extends Controller
 
             $project = Project::create($validatedData);
             
-            // Sync facilities
-            if (isset($validatedData['facilities'])) {
-                $project->facilities()->sync($validatedData['facilities']);
-            }
+            // Log project creation
+            \Log::info('Project created', [
+                'project_id' => $project->id,
+                'title' => $project->title,
+                'user_id' => auth()->id()
+            ]);
 
             return redirect()->route('admin.projects.index')
-                ->with('success', 'Project created successfully.');
+                ->with('success', 'Project "' . $project->title . '" created successfully.');
         } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Failed to create project', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'data' => $request->except(['image', 'gallery'])
+            ]);
+            
             return redirect()->back()
-                ->with('error', 'Error creating project: ' . $e->getMessage())
+                ->with('error', 'Error creating project. Please try again.')
                 ->withInput();
         }
     }
@@ -85,7 +111,8 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('admin.projects.edit', compact('project'));
+        $availableFacilities = Project::getAvailableFacilities();
+        return view('admin.projects.edit', compact('project', 'availableFacilities'));
     }
 
     /**
@@ -96,6 +123,7 @@ class ProjectController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|max:255|unique:projects,title,' . $project->id,
             'category' => 'required|in:residential,commercial',
+            'short_description' => 'required|max:150',
             'description' => 'required',
             'address' => 'required|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -103,23 +131,39 @@ class ProjectController extends Controller
             'status' => 'required|in:draft,published',
             'existing_gallery' => 'nullable|array',
             'facilities' => 'nullable|array',
-            'facilities.*' => 'exists:facilities,id'
+            'facilities.*' => 'string|max:255'
         ]);
 
         try {
             // Update slug if title changed
             if ($project->title !== $validatedData['title']) {
-                $validatedData['slug'] = Str::slug($validatedData['title']);
+                $baseSlug = Str::slug($validatedData['title']);
+                $slug = $baseSlug;
+                $counter = 1;
+                
+                while (Project::where('slug', $slug)->where('id', '!=', $project->id)->exists()) {
+                    $slug = $baseSlug . '-' . $counter;
+                    $counter++;
+                }
+                
+                $validatedData['slug'] = $slug;
             }
 
             // Handle main image
             if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                
+                // Additional image validation
+                if (!$image->isValid()) {
+                    throw new \Exception('Uploaded image is corrupted or invalid.');
+                }
+                
                 // Delete old image
                 if ($project->image) {
                     Storage::disk('public')->delete($project->image);
                 }
                 // Store new image
-                $path = $request->file('image')->store('projects', 'public');
+                $path = $image->store('projects', 'public');
                 $validatedData['image'] = $path;
             }
 
@@ -132,7 +176,9 @@ class ProjectController extends Controller
             
             if ($request->hasFile('gallery')) {
                 foreach ($request->file('gallery') as $image) {
-                    $galleryPaths[] = $image->store('projects/gallery', 'public');
+                    if ($image->isValid()) {
+                        $galleryPaths[] = $image->store('projects/gallery', 'public');
+                    }
                 }
             }
             
@@ -140,11 +186,16 @@ class ProjectController extends Controller
             
             $project->update($validatedData);
             
-            // Sync facilities
-            $project->facilities()->sync($request->input('facilities', []));
+            // Log project update
+            \Log::info('Project updated', [
+                'project_id' => $project->id,
+                'title' => $project->title,
+                'user_id' => auth()->id(),
+                'changes' => array_keys($validatedData)
+            ]);
 
             return redirect()->route('admin.projects.index')
-                ->with('success', 'Project updated successfully.');
+                ->with('success', 'Project "' . $project->title . '" updated successfully.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Error updating project: ' . $e->getMessage())

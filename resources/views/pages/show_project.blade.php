@@ -100,7 +100,7 @@
             <div class="prj-section-line"></div>
         </div>
         <div class="prj-section-text">
-            {!! $project->description !!}
+            {!! nl2br(e($project->description)) !!}
         </div>
     </div>
 </section>
@@ -115,13 +115,19 @@
         <div class="prj-fac-line"></div>
 
         <div class="prj-fac-grid">
-            @foreach($project->facilities as $facility)
+            @foreach($project->facilities as $facilityName)
+                @php
+                    $facilityData = collect(\App\Models\Project::getAvailableFacilities())
+                        ->firstWhere('name', $facilityName);
+                @endphp
+                @if($facilityData)
                 <div class="prj-fac-item">
                     <div class="prj-fac-icon">
-                        <i class="fas {{ $facility->icon }}"></i>
+                        <i class="fas {{ $facilityData['icon'] }}"></i>
                     </div>
-                    <span class="prj-fac-name">{{ $facility->name }}</span>
+                    <span class="prj-fac-name">{{ $facilityData['name'] }}</span>
                 </div>
+                @endif
             @endforeach
         </div>
     </div>

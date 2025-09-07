@@ -62,11 +62,17 @@
                 Facilities
             </h3>
             <div class="admin-facilities-grid">
-                @foreach($project->facilities as $facility)
-                <div class="admin-facility-item">
-                    <i class="fas {{ $facility->icon }}"></i>
-                    <span>{{ $facility->name }}</span>
-                </div>
+                @foreach($project->facilities as $facilityName)
+                    @php
+                        $facilityData = collect(\App\Models\Project::getAvailableFacilities())
+                            ->firstWhere('name', $facilityName);
+                    @endphp
+                    @if($facilityData)
+                    <div class="admin-facility-item">
+                        <i class="fas {{ $facilityData['icon'] }}"></i>
+                        <span>{{ $facilityData['name'] }}</span>
+                    </div>
+                    @endif
                 @endforeach
             </div>
         </div>

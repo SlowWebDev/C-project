@@ -53,7 +53,9 @@ module.exports = {
                     700: '#92400E',
                     800: '#78350F',
                     900: '#451A03'
-                }
+                },
+                'auth-left': '#131B2D',
+                'auth-right': '#202B3D'
             },
             backgroundImage: {
                 'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<div class="admin-card admin-container-3xl">
+<div class="admin-card">
     <form action="{{ route('admin.projects.update', $project) }}" method="POST" enctype="multipart/form-data" id="projectForm" class="space-y-6">
         @csrf
         @method('PUT')
@@ -60,14 +60,14 @@
         <div class="admin-form-group">
             <label class="admin-label">Facilities</label>
             <div class="admin-checkbox-group">
-                @foreach(\App\Models\Facility::all() as $facility)
+                @foreach($availableFacilities as $facility)
                 <label class="admin-checkbox-item">
-                    <input type="checkbox" name="facilities[]" value="{{ $facility->id }}"
+                    <input type="checkbox" name="facilities[]" value="{{ $facility['name'] }}"
                            class="admin-checkbox"
-                           {{ in_array($facility->id, old('facilities', $project->facilities->pluck('id')->toArray())) ? 'checked' : '' }}>
+                           {{ in_array($facility['name'], old('facilities', $project->facilities ?? [])) ? 'checked' : '' }}>
                     <div class="admin-checkbox-content">
-                        <i class="fas {{ $facility->icon }}"></i>
-                        <span>{{ $facility->name }}</span>
+                        <i class="fas {{ $facility['icon'] }}"></i>
+                        <span>{{ $facility['name'] }}</span>
                     </div>
                 </label>
                 @endforeach
