@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'security' => \App\Http\Middleware\SecurityMiddleware::class,
             'track.activity' => \App\Http\Middleware\TrackActivityMiddleware::class,
+            '2fa' => \App\Http\Middleware\TwoFactorMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

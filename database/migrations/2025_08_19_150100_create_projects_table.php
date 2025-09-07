@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('image')->nullable();
             $table->json('gallery')->nullable();
+            $table->json('facilities')->nullable(); 
             $table->enum('status', ['draft', 'published'])->default('draft');
             $table->timestamps();
         });

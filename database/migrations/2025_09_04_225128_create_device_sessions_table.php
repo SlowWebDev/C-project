@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('device_sessions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('device_id')->unique(); // unique device identifier
+            $table->string('device_id'); // device identifier
             $table->string('device_name')->nullable(); // friendly device name
             $table->string('device_type'); // desktop, mobile, tablet
             $table->string('browser');
@@ -28,6 +28,9 @@ return new class extends Migration
             $table->text('user_agent');
             $table->json('metadata')->nullable();
             $table->timestamps();
+            
+
+            $table->unique(['user_id', 'device_id']);
             
             $table->index(['user_id', 'last_activity']);
             $table->index(['device_id', 'user_id']);

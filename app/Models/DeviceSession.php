@@ -46,10 +46,21 @@ class DeviceSession extends Model
     public static function getCurrentDeviceId(): string
     {
         $request = request();
-        $userAgent = $request->userAgent();
-        $ip = $request->ip();
+        $agent = new Agent();
         
-        return md5($userAgent . $ip . auth()->id());
+        // Create more robust device fingerprint
+        $fingerprint = [
+            'user_agent' => $request->userAgent(),
+            'ip' => $request->ip(),
+            'user_id' => auth()->id(),
+            'browser' => $agent->browser(),
+            'platform' => $agent->platform(),
+            'device_type' => $agent->isDesktop() ? 'desktop' : ($agent->isMobile() ? 'mobile' : 'tablet'),
+            'accept_language' => $request->header('Accept-Language'),
+            'accept_encoding' => $request->header('Accept-Encoding'),
+        ];
+        
+        return hash('sha256', implode('|', array_filter($fingerprint)));
     }
 
     public static function registerOrUpdateDevice(): self

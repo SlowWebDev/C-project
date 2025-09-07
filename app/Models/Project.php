@@ -16,26 +16,48 @@ class Project extends Model
         'description',
         'image',
         'gallery',
+        'facilities',
         'address',
         'status'
     ];
 
     protected $attributes = [
-        'status' => 'published'
+        'status' => 'draft' 
     ];
     
     protected $casts = [
-        'gallery' => 'array'
+        'gallery' => 'array',
+        'facilities' => 'array'
     ];
 
-    public function facilities()
+    /**
+     * Get default facilities list
+     */
+    public static function getAvailableFacilities()
     {
-        return $this->belongsToMany(Facility::class);
+        return [
+            ['name' => 'Commercial Mall', 'icon' => 'fa-store'],
+            ['name' => 'Club House', 'icon' => 'fa-house-flag'],
+            ['name' => 'Lagoons', 'icon' => 'fa-water'],
+            ['name' => 'Water Features', 'icon' => 'fa-water-ladder'],
+            ['name' => 'Running Track', 'icon' => 'fa-person-running'],
+            ['name' => 'Parking', 'icon' => 'fa-square-parking'],
+            ['name' => 'Security', 'icon' => 'fa-shield-halved'],
+            ['name' => 'Kids Area', 'icon' => 'fa-children'],
+            ['name' => 'Hypermarket', 'icon' => 'fa-cart-shopping'],
+            ['name' => 'Pharmacies', 'icon' => 'fa-prescription-bottle-medical'],
+            ['name' => 'Banks', 'icon' => 'fa-building-columns'],
+            ['name' => 'Restaurants', 'icon' => 'fa-utensils']
+        ];
     }
 
-    public function hasFacility($facilityId)
+    /**
+     * Check if project has specific facility
+     */
+    public function hasFacility($facilityName)
     {
-        return $this->facilities->contains($facilityId);
+        if (!$this->facilities) return false;
+        return in_array($facilityName, $this->facilities);
     }
 
     public function getImageUrlAttribute()
@@ -47,13 +69,10 @@ class Project extends Model
     {
         return $query->where('status', 'published');
     }
-
-    protected static function boot()
+    
+    public function scopeDraft($query)
     {
-        parent::boot();
-        
-        static::creating(function ($project) {
-            $project->slug = Str::slug($project->title);
-        });
+        return $query->where('status', 'draft');
     }
+
 }
