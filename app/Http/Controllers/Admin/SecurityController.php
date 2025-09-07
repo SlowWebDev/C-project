@@ -14,42 +14,47 @@ use Illuminate\Support\Facades\Auth;
 
 class SecurityController extends Controller
 {
+    private function getCurrentUser()
+    {
+        return auth()->user()->load(['securityEvents', 'deviceSessions', 'activityLogs']);
+    }
+
     public function overview()
     {
-        $user = auth()->user();
+        $user = $this->getCurrentUser();
         
-        // Get recent security events
-        $recentEvents = SecurityEvent::where('user_id', $user->id)
+        $recentEvents = $user->securityEvents()
             ->latest('occurred_at')
             ->take(5)
             ->get();
         
-        // Get active devices
-        $activeDevices = DeviceSession::where('user_id', $user->id)
+        $activeDevices = $user->deviceSessions()
             ->where('is_blocked', false)
             ->latest('last_activity')
             ->take(3)
             ->get();
         
-        // Get recent activities
-        $recentActivities = ActivityLog::where('user_id', $user->id)
+        $recentActivities = $user->activityLogs()
             ->latest()
             ->take(5)
             ->get();
         
-        // Security stats
+        $deviceStats = $user->deviceSessions()
+            ->selectRaw('COUNT(*) as total, SUM(is_trusted) as trusted, SUM(is_blocked) as blocked')
+            ->first();
+        
+        $loginStats = $user->securityEvents()
+            ->whereDate('occurred_at', today())
+            ->selectRaw('SUM(CASE WHEN event_type = "login" THEN 1 ELSE 0 END) as login_attempts,
+                        SUM(CASE WHEN event_type = "failed_login" THEN 1 ELSE 0 END) as failed_logins')
+            ->first();
+
         $stats = [
-            'total_devices' => DeviceSession::where('user_id', $user->id)->count(),
-            'trusted_devices' => DeviceSession::where('user_id', $user->id)->where('is_trusted', true)->count(),
-            'blocked_devices' => DeviceSession::where('user_id', $user->id)->where('is_blocked', true)->count(),
-            'login_attempts_today' => SecurityEvent::where('user_id', $user->id)
-                ->where('event_type', 'login')
-                ->whereDate('occurred_at', today())
-                ->count(),
-            'failed_logins_today' => SecurityEvent::where('user_id', $user->id)
-                ->where('event_type', 'failed_login')
-                ->whereDate('occurred_at', today())
-                ->count(),
+            'total_devices' => $deviceStats->total ?? 0,
+            'trusted_devices' => $deviceStats->trusted ?? 0,
+            'blocked_devices' => $deviceStats->blocked ?? 0,
+            'login_attempts_today' => $loginStats->login_attempts ?? 0,
+            'failed_logins_today' => $loginStats->failed_logins ?? 0,
         ];
         
         return view('admin.security.overview', compact('recentEvents', 'activeDevices', 'recentActivities', 'stats'));
@@ -68,10 +73,7 @@ class SecurityController extends Controller
             return back()->withErrors(['current_password' => 'Current password is incorrect.']);
         }
         
-        $oldHash = $user->password;
-        $user->update([
-            'password' => Hash::make($request->password)
-        ]);
+        $user->update(['password' => Hash::make($request->password)]);
         
         SecurityEvent::logEvent('password_change', SecurityEvent::STATUS_SUCCESS, $user->id, 'Password changed successfully');
         
@@ -91,7 +93,6 @@ class SecurityController extends Controller
             return back()->withErrors(['current_password' => 'Current password is incorrect.']);
         }
         
-        $oldEmail = $user->email;
         $user->update(['email' => $request->email]);
         
         SecurityEvent::logEvent('email_change', SecurityEvent::STATUS_SUCCESS, $user->id, 'Email address was updated');
@@ -101,19 +102,18 @@ class SecurityController extends Controller
     
     public function activityLogs(Request $request)
     {
-        $query = ActivityLog::where('user_id', auth()->id())->with('user');
+        $user = auth()->user();
+        $query = $user->activityLogs()->with('user');
         
-        // Filter by action
-        if ($request->has('action') && $request->action) {
+        if ($request->filled('action')) {
             $query->where('action', 'like', '%' . $request->action . '%');
         }
         
-        // Filter by date range
-        if ($request->has('date_from') && $request->date_from) {
+        if ($request->filled('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
         }
         
-        if ($request->has('date_to') && $request->date_to) {
+        if ($request->filled('date_to')) {
             $query->whereDate('created_at', '<=', $request->date_to);
         }
         
@@ -124,24 +124,22 @@ class SecurityController extends Controller
     
     public function securityEvents(Request $request)
     {
-        $query = SecurityEvent::where('user_id', auth()->id());
+        $user = auth()->user();
+        $query = $user->securityEvents();
         
-        // Filter by event type
-        if ($request->has('event_type') && $request->event_type) {
+        if ($request->filled('event_type')) {
             $query->where('event_type', $request->event_type);
         }
         
-        // Filter by status
-        if ($request->has('status') && $request->status) {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
         
-        // Filter by date range
-        if ($request->has('date_from') && $request->date_from) {
+        if ($request->filled('date_from')) {
             $query->whereDate('occurred_at', '>=', $request->date_from);
         }
         
-        if ($request->has('date_to') && $request->date_to) {
+        if ($request->filled('date_to')) {
             $query->whereDate('occurred_at', '<=', $request->date_to);
         }
         
@@ -152,7 +150,8 @@ class SecurityController extends Controller
     
     public function deviceManagement()
     {
-        $devices = DeviceSession::where('user_id', auth()->id())
+        $user = auth()->user();
+        $devices = $user->deviceSessions()
             ->latest('last_activity')
             ->get();
         
@@ -163,9 +162,7 @@ class SecurityController extends Controller
     
     public function blockDevice(DeviceSession $device)
     {
-        if ($device->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->authorizeDevice($device);
         
         if ($device->isCurrentDevice()) {
             return back()->withErrors(['error' => 'You cannot block your current device.']);
@@ -178,9 +175,7 @@ class SecurityController extends Controller
     
     public function unblockDevice(DeviceSession $device)
     {
-        if ($device->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->authorizeDevice($device);
         
         $device->update(['is_blocked' => false]);
         
@@ -189,9 +184,7 @@ class SecurityController extends Controller
     
     public function trustDevice(DeviceSession $device)
     {
-        if ($device->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->authorizeDevice($device);
         
         $device->trust();
         
@@ -200,16 +193,20 @@ class SecurityController extends Controller
     
     public function untrustDevice(DeviceSession $device)
     {
-        if ($device->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->authorizeDevice($device);
         
         $device->update(['is_trusted' => false]);
         
         return back()->with('success', 'Device trust has been removed.');
     }
     
-    
+    private function authorizeDevice(DeviceSession $device)
+    {
+        if ($device->user_id !== auth()->id()) {
+            abort(403);
+        }
+    }
+
     public function settings()
     {
         // Only accessible by main admin
