@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->text('two_factor_secret')->nullable(); // Encrypted 2FA secret
+            $table->boolean('two_factor_enabled')->default(false);
+            $table->timestamp('two_factor_setup_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
