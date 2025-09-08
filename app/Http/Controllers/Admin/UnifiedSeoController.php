@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\UnifiedSeo;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -58,8 +59,25 @@ class UnifiedSeoController extends Controller
                 unset($validated['default_og_image']);
             }
             
+            // Store old values for activity logging
+            $oldValues = $seo->toArray();
+            
             // Update the SEO settings
             $seo->update($validated);
+            
+            // Log detailed SEO changes
+            $changedFields = [];
+            foreach ($validated as $field => $newValue) {
+                $oldValue = $oldValues[$field] ?? null;
+                if ($oldValue !== $newValue) {
+                    $changedFields[] = $this->getFieldDisplayName($field);
+                }
+            }
+            
+            if (!empty($changedFields)) {
+                $description = 'Updated SEO settings: ' . implode(', ', $changedFields) . '. Sitemap regenerated automatically.';
+                ActivityLog::logActivity('seo_updated', $seo, null, null, $description);
+            }
             
             return redirect()->route('admin.seo.unified')
                 ->with('success', 'SEO settings updated successfully!');
@@ -79,6 +97,9 @@ class UnifiedSeoController extends Controller
         $defaults = UnifiedSeo::getDefaults();
         $seo->update($defaults);
         
+        // Log the reset action
+        ActivityLog::logActivity('seo_reset', $seo, null, null, 'Reset all SEO settings to default values. Sitemap regenerated automatically.');
+        
         return redirect()->route('admin.seo.unified')
             ->with('success', 'SEO settings reset to defaults!');
     }
@@ -94,5 +115,41 @@ class UnifiedSeoController extends Controller
         }
         
         return view('admin.seo.preview', compact('pageData', 'page', 'pages'));
+    }
+    
+    private function getFieldDisplayName(string $field): string
+    {
+        $displayNames = [
+            'site_name' => 'Site Name',
+            'default_og_image' => 'Default Social Image',
+        ];
+        
+        // Handle page-specific fields
+        if (str_contains($field, '_')) {
+            $parts = explode('_', $field);
+            $pageKey = $parts[0];
+            $fieldType = implode('_', array_slice($parts, 1));
+            
+            $pageNames = UnifiedSeo::getPages();
+            $pageName = $pageNames[$pageKey] ?? ucfirst($pageKey);
+            
+            $fieldNames = [
+                'title' => 'Title',
+                'meta_title' => 'Meta Title',
+                'meta_description' => 'Meta Description',
+                'meta_keywords' => 'Meta Keywords',
+                'og_title' => 'Social Title',
+                'og_description' => 'Social Description',
+                'canonical' => 'Canonical URL',
+                'frequency' => 'Update Frequency',
+                'active' => 'Status',
+                'indexable' => 'Search Visibility',
+            ];
+            
+            $fieldDisplayName = $fieldNames[$fieldType] ?? ucfirst(str_replace('_', ' ', $fieldType));
+            return $pageName . ' - ' . $fieldDisplayName;
+        }
+        
+        return $displayNames[$field] ?? ucfirst(str_replace('_', ' ', $field));
     }
 }

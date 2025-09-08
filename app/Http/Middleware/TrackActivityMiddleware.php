@@ -72,6 +72,8 @@ class TrackActivityMiddleware
             'admin.careers.destroy' => 'job_deleted',
             'admin.contacts.destroy' => 'contact_deleted',
             'admin.contacts.status' => 'contact_status_updated',
+            'admin.seo.update' => 'seo_updated',
+            'admin.seo.reset' => 'seo_reset',
         ];
         
         if ($routeName && isset($patterns[$routeName])) {
@@ -108,6 +110,8 @@ class TrackActivityMiddleware
             'job_deleted' => 'Deleted job posting',
             'contact_deleted' => 'Deleted contact message',
             'contact_status_updated' => 'Updated contact message status',
+            'seo_updated' => 'Updated SEO settings and regenerated sitemap',
+            'seo_reset' => 'Reset all SEO settings to defaults',
         ];
         
         return $descriptions[$action] ?? 'Performed admin action: ' . $action;
