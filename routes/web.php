@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\TwoFactorController;
+use App\Http\Controllers\Admin\UnifiedSeoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,16 @@ Route::post('/contact', [ContactController::class, 'store'])
 Route::post('/projects/{project}/inquiry', [ContactController::class, 'storeProjectInquiry'])
     ->name('project.inquiry')
     ->middleware('throttle:3,10');
+
+// Sitemap
+Route::get('/sitemap.xml', function() {
+    if (file_exists(public_path('sitemap.xml'))) {
+        return response()->file(public_path('sitemap.xml'), [
+            'Content-Type' => 'application/xml'
+        ]);
+    }
+    return response('Sitemap not found', 404);
+})->name('sitemap');
 
 /*
 |--------------------------------------------------------------------------
@@ -163,5 +174,13 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', '2fa', 'secur
         Route::patch('/devices/{device}/trust', [SecurityController::class, 'trustDevice'])->name('device-trust');
         Route::patch('/devices/{device}/untrust', [SecurityController::class, 'untrustDevice'])->name('device-untrust');
         Route::get('/settings', [SecurityController::class, 'settings'])->name('settings');
+    });
+    
+    // Unified SEO Management Routes
+    Route::prefix('seo')->name('seo.')->group(function () {
+        Route::get('/', [UnifiedSeoController::class, 'index'])->name('unified');
+        Route::post('/update', [UnifiedSeoController::class, 'update'])->name('update');
+        Route::post('/reset', [UnifiedSeoController::class, 'reset'])->name('reset');
+        Route::get('/preview/{page}', [UnifiedSeoController::class, 'preview'])->name('preview');
     });
 });

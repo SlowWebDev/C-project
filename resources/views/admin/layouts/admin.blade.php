@@ -116,6 +116,13 @@
                     <span>Careers</span>
                 </a>
                 
+                <a href="{{ route('admin.seo.unified') }}" 
+                   class="flex items-center px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700
+                          {{ request()->routeIs('admin.seo.*') ? 'bg-gray-700 text-white border-r-4 border-blue-500' : '' }}">
+                    <i class="fas fa-search w-6 mr-3"></i>
+                    <span>SEO Manager</span>
+                </a>
+                
                 <!-- Security Dropdown -->
                 <div class="admin-dropdown">
                     <button class="admin-dropdown-trigger flex items-center w-full px-4 py-3 text-gray-300 rounded-lg transition-colors hover:bg-gray-700

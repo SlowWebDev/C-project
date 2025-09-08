@@ -6,17 +6,15 @@
     "license": "proprietary",
     "require": {
         "php": "^8.2",
-        "chillerlan/php-qrcode": "^5.0",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "pragmarx/google2fa": "^8.0",
-        "pragmarx/google2fa-laravel": "^2.3"
+        "pragmarx/google2fa-laravel": "^2.1"
     },
     "require-dev": {
         "enlightn/security-checker": "^2.0",
         "fakerphp/faker": "^1.23",
-        "laravel/pail": "^1.2.2",
+        "laravel/pail": "^1.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
@@ -38,8 +36,6 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "@php artisan config:clear",
-            "@php artisan clear-compiled",
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
@@ -55,7 +51,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+            "npx concurrently -c \"#93c5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" --names=server,queue,vite"
         ],
         "test": [
             "@php artisan config:clear --ansi",
@@ -79,3 +75,4 @@
     "minimum-stability": "stable",
     "prefer-stable": true
 }
+
