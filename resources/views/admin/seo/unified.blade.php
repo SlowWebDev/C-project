@@ -316,47 +316,4 @@
         </form>
     </div>
 </div>
-
-<script>
-function showPage(pageKey) {
-    // Hide all page contents
-    document.querySelectorAll('.page-content').forEach(el => {
-        el.classList.add('hidden');
-    });
-    
-    // Remove active styling from all tabs
-    document.querySelectorAll('.page-tab').forEach(el => {
-        el.classList.remove('border-blue-500', 'bg-blue-600/10', 'text-blue-400');
-        el.classList.add('border-transparent', 'text-gray-400');
-    });
-    
-    // Show selected page content
-    document.getElementById('page-' + pageKey).classList.remove('hidden');
-    
-    // Add active styling to selected tab
-    const activeTab = document.getElementById('tab-' + pageKey);
-    activeTab.classList.remove('border-transparent', 'text-gray-400');
-    activeTab.classList.add('border-blue-500', 'bg-blue-600/10', 'text-blue-400');
-}
-
-// Form validation
-document.querySelector('form').addEventListener('submit', function(e) {
-    const requiredFields = document.querySelectorAll('input[required], select[required]');
-    let valid = true;
-    
-    requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-            field.style.borderColor = '#ef4444';
-            valid = false;
-        } else {
-            field.style.borderColor = '#e5e7eb';
-        }
-    });
-    
-    if (!valid) {
-        e.preventDefault();
-        alert('Please fill in all required fields.');
-    }
-});
-</script>
 @endsection

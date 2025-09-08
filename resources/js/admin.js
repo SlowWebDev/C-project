@@ -839,3 +839,21 @@ window.scrollToSection = function(selector) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 };
+
+/* ===== SEO MANAGEMENT ===== */
+class SeoManager {
+    static showPage(pageKey) {
+        document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.page-tab').forEach(el => {
+            el.classList.remove('border-blue-500', 'bg-blue-600/10', 'text-blue-400');
+            el.classList.add('border-transparent', 'text-gray-400');
+        });
+        document.getElementById('page-' + pageKey).classList.remove('hidden');
+        const activeTab = document.getElementById('tab-' + pageKey);
+        activeTab.classList.remove('border-transparent', 'text-gray-400');
+        activeTab.classList.add('border-blue-500', 'bg-blue-600/10', 'text-blue-400');
+    }
+}
+
+// Global function for SEO page switching
+window.showPage = SeoManager.showPage;
