@@ -1,2 +1,29 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /api/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /.env
+Disallow: /config/
+Disallow: /database/
+Disallow: /bootstrap/
+Disallow: /routes/
+Disallow: /resources/
+Disallow: /tests/
+Disallow: /artisan
+Disallow: /composer.json
+Disallow: /composer.lock
+Disallow: /package.json
+Disallow: /.git/
+Disallow: /.gitignore
+Disallow: /README.md
+
+# Allow specific paths
+Allow: /public/
+Allow: /images/
+Allow: /css/
+Allow: /js/
+Allow: /favicon.ico
+Allow: /sitemap.xml
+
+Sitemap: /sitemap.xml
