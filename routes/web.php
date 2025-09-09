@@ -63,7 +63,6 @@ Route::get('/sitemap.xml', function() {
     }
     return response('Sitemap not found', 404);
 })->name('sitemap');
-
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
@@ -171,8 +170,8 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', '2fa', 'secur
         Route::get('/device-management', [SecurityController::class, 'deviceManagement'])->name('device-management');
         Route::patch('/devices/{device}/block', [SecurityController::class, 'blockDevice'])->name('device-block');
         Route::patch('/devices/{device}/unblock', [SecurityController::class, 'unblockDevice'])->name('device-unblock');
-        Route::patch('/devices/{device}/trust', [SecurityController::class, 'trustDevice'])->name('device-trust');
-        Route::patch('/devices/{device}/untrust', [SecurityController::class, 'untrustDevice'])->name('device-untrust');
+        Route::get('/verify-2fa', [SecurityController::class, 'show2FAVerification'])->name('verify-2fa');
+        Route::post('/verify-2fa', [SecurityController::class, 'process2FAVerification'])->name('process-2fa');
         Route::get('/settings', [SecurityController::class, 'settings'])->name('settings');
     });
     

@@ -40,7 +40,7 @@ class SecurityController extends Controller
             ->get();
         
         $deviceStats = $user->deviceSessions()
-            ->selectRaw('COUNT(*) as total, SUM(is_trusted) as trusted, SUM(is_blocked) as blocked')
+            ->selectRaw('COUNT(*) as total, SUM(is_blocked) as blocked')
             ->first();
         
         $loginStats = $user->securityEvents()
@@ -51,7 +51,6 @@ class SecurityController extends Controller
 
         $stats = [
             'total_devices' => $deviceStats->total ?? 0,
-            'trusted_devices' => $deviceStats->trusted ?? 0,
             'blocked_devices' => $deviceStats->blocked ?? 0,
             'login_attempts_today' => $loginStats->login_attempts ?? 0,
             'failed_logins_today' => $loginStats->failed_logins ?? 0,
@@ -160,7 +159,7 @@ class SecurityController extends Controller
         return view('admin.security.device-management', compact('devices', 'currentDeviceId'));
     }
     
-    public function blockDevice(DeviceSession $device)
+    public function blockDevice(Request $request, DeviceSession $device)
     {
         $this->authorizeDevice($device);
         
@@ -168,36 +167,170 @@ class SecurityController extends Controller
             return back()->withErrors(['error' => 'You cannot block your current device.']);
         }
         
+        // Check if 2FA code is provided
+        if (!$request->has('tfa_code')) {
+            // Store device info in session for 2FA verification
+            session([
+                '2fa_pending_action' => 'block_device',
+                '2fa_device_id' => $device->id,
+                '2fa_device_name' => $device->device_name,
+                '2fa_return_url' => url()->previous()
+            ]);
+            
+            return redirect()->route('admin.security.verify-2fa')
+                ->with('info', 'Please verify your identity to block this device.');
+        }
+        
+        // Verify 2FA code
+        if (!$this->verify2FA($request->tfa_code)) {
+            return back()->withErrors(['tfa_code' => 'Invalid authentication code. Please try again.']);
+        }
+        
         $device->block();
+        
+        // Clear 2FA session data
+        session()->forget(['2fa_pending_action', '2fa_device_id', '2fa_device_name', '2fa_return_url']);
         
         return back()->with('success', 'Device has been blocked successfully.');
     }
     
-    public function unblockDevice(DeviceSession $device)
+    public function unblockDevice(Request $request, DeviceSession $device)
     {
         $this->authorizeDevice($device);
         
+        // Check if 2FA code is provided
+        if (!$request->has('tfa_code')) {
+            // Store device info in session for 2FA verification
+            session([
+                '2fa_pending_action' => 'unblock_device',
+                '2fa_device_id' => $device->id,
+                '2fa_device_name' => $device->device_name,
+                '2fa_return_url' => url()->previous()
+            ]);
+            
+            return redirect()->route('admin.security.verify-2fa')
+                ->with('info', 'Please verify your identity to unblock this device.');
+        }
+        
+        // Verify 2FA code
+        if (!$this->verify2FA($request->tfa_code)) {
+            return back()->withErrors(['tfa_code' => 'Invalid authentication code. Please try again.']);
+        }
+        
         $device->update(['is_blocked' => false]);
+        
+        // Clear 2FA session data
+        session()->forget(['2fa_pending_action', '2fa_device_id', '2fa_device_name', '2fa_return_url']);
         
         return back()->with('success', 'Device has been unblocked successfully.');
     }
     
-    public function trustDevice(DeviceSession $device)
+    
+    public function show2FAVerification()
     {
-        $this->authorizeDevice($device);
+        // Check if there's a pending 2FA action
+        if (!session('2fa_pending_action')) {
+            return redirect()->route('admin.security.device-management')
+                ->with('error', 'No pending security action found.');
+        }
         
-        $device->trust();
+        $pendingAction = session('2fa_pending_action');
+        $deviceName = session('2fa_device_name');
+        $actionText = $pendingAction === 'block_device' ? 'Block Device' : 'Unblock Device';
         
-        return back()->with('success', 'Device has been marked as trusted.');
+        return view('admin.security.verify-2fa', compact('pendingAction', 'deviceName', 'actionText'));
     }
     
-    public function untrustDevice(DeviceSession $device)
+    public function process2FAVerification(Request $request)
     {
-        $this->authorizeDevice($device);
+        $user = auth()->user();
         
-        $device->update(['is_trusted' => false]);
+        // Dynamic validation based on 2FA setup
+        if ($user->hasTwoFactorEnabled()) {
+            $request->validate([
+                'tfa_code' => 'required|string|size:6'
+            ]);
+        } else {
+            $request->validate([
+                'password' => 'required|string'
+            ]);
+        }
         
-        return back()->with('success', 'Device trust has been removed.');
+        // Check if there's a pending action
+        if (!session('2fa_pending_action')) {
+            return redirect()->route('admin.security.device-management')
+                ->with('error', 'No pending security action found.');
+        }
+        
+        // Verify authentication
+        if ($user->hasTwoFactorEnabled()) {
+            // Use 2FA verification
+            if (!$this->verify2FA($request->tfa_code)) {
+                return back()->withErrors(['tfa_code' => 'Invalid authentication code. Please try again.']);
+            }
+        } else {
+            // Use password verification as fallback
+            if (!Hash::check($request->password, $user->password)) {
+                return back()->withErrors(['password' => 'Invalid password. Please try again.']);
+            }
+        }
+        
+        // Get pending action details
+        $action = session('2fa_pending_action');
+        $deviceId = session('2fa_device_id');
+        $returnUrl = session('2fa_return_url', route('admin.security.device-management'));
+        
+        // Find device
+        $device = DeviceSession::find($deviceId);
+        if (!$device || $device->user_id !== auth()->id()) {
+            session()->forget(['2fa_pending_action', '2fa_device_id', '2fa_device_name', '2fa_return_url']);
+            return redirect()->route('admin.security.device-management')
+                ->with('error', 'Device not found or access denied.');
+        }
+        
+        // Execute the pending action
+        try {
+            if ($action === 'block_device') {
+                if ($device->isCurrentDevice()) {
+                    throw new \Exception('You cannot block your current device.');
+                }
+                $device->block();
+                $message = 'Device has been blocked successfully.';
+            } elseif ($action === 'unblock_device') {
+                $device->update(['is_blocked' => false]);
+                $message = 'Device has been unblocked successfully.';
+            } else {
+                throw new \Exception('Invalid action.');
+            }
+            
+            // Clear session data
+            session()->forget(['2fa_pending_action', '2fa_device_id', '2fa_device_name', '2fa_return_url']);
+            
+            return redirect($returnUrl)->with('success', $message);
+            
+        } catch (\Exception $e) {
+            session()->forget(['2fa_pending_action', '2fa_device_id', '2fa_device_name', '2fa_return_url']);
+            return redirect($returnUrl)->with('error', $e->getMessage());
+        }
+    }
+    
+    private function verify2FA($code)
+    {
+        $user = auth()->user();
+        
+        // Check if user has 2FA enabled
+        if (!$user->hasTwoFactorEnabled()) {
+            return false;
+        }
+        
+        try {
+            // Use the same method as login verification
+            return $user->verifyTwoFactorCode($code, false);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('2FA verification error: ' . $e->getMessage());
+            return false;
+        }
     }
     
     private function authorizeDevice(DeviceSession $device)

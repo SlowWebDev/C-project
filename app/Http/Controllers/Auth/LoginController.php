@@ -129,12 +129,43 @@ class LoginController extends Controller
             'User logged out'
         );
         
+
         Auth::logout();
-        $request->session()->forget('2fa_verified');
+        
+        // Forget specific session keys
+        $request->session()->forget([
+            '2fa_verified',
+            '2fa_pending_action',
+            '2fa_device_id', 
+            '2fa_device_name',
+            '2fa_return_url',
+            'login.lockout_time',
+            'intended_url'
+        ]);
+        
+        // Invalidate session and regenerate token
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect()->route('admin.login');
+        // Create response with redirect
+        $response = redirect()->route('admin.login')
+            ->with('success', 'You have been logged out successfully.');
+        
+        // Clear authentication cookies properly
+        $cookiesToClear = [
+            'laravel_session',
+            'remember_admin_token',
+            'admin_remember',
+            'XSRF-TOKEN'
+        ];
+        
+        foreach ($cookiesToClear as $cookieName) {
+            $response = $response->withCookie(
+                cookie()->forget($cookieName)
+            );
+        }
+        
+        return $response;
     }
 
     /**

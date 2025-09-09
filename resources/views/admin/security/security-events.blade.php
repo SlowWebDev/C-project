@@ -100,36 +100,14 @@
         @if($events->count() > 0)
             <div class="space-y-4">
                 @foreach($events as $event)
-                    <div class="p-6 bg-gray-700/20 rounded-lg hover:bg-gray-700/30 transition-colors">
+                    <!-- Desktop/Tablet Layout -->
+                    <div class="hidden sm:block p-6 bg-gray-700/20 rounded-lg hover:bg-gray-700/30 transition-colors">
                         <div class="flex items-start justify-between">
                             <!-- Event Info -->
                             <div class="flex items-start space-x-4 flex-1">
                                 <!-- Event Icon -->
-                                @php
-                                    $eventColors = [
-                                        'login' => 'green',
-                                        'logout' => 'blue', 
-                                        'failed_login' => 'red',
-                                        'password_change' => 'yellow',
-                                        'email_change' => 'cyan',
-                                        'device_registered' => 'purple',
-                                        'device_blocked' => 'orange'
-                                    ];
-                                    $eventColor = $eventColors[$event->event_type] ?? 'gray';
-                                    
-                                    $eventIcons = [
-                                        'login' => 'sign-in-alt',
-                                        'logout' => 'sign-out-alt',
-                                        'failed_login' => 'times-circle',
-                                        'password_change' => 'key',
-                                        'email_change' => 'envelope',
-                                        'device_registered' => 'mobile-alt',
-                                        'device_blocked' => 'ban'
-                                    ];
-                                    $eventIcon = $eventIcons[$event->event_type] ?? 'shield-alt';
-                                @endphp
-                                <div class="w-12 h-12 bg-{{ $eventColor }}-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-{{ $eventIcon }} text-{{ $eventColor }}-400 text-lg"></i>
+                                <div class="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-shield-alt text-amber-400 text-lg"></i>
                                 </div>
 
                                 <!-- Event Details -->
@@ -137,7 +115,7 @@
                                     <!-- Event Title -->
                                     <div class="flex items-center gap-3 mb-3">
                                         <h3 class="text-lg font-semibold text-white">{{ $event->user->name ?? 'Unknown User' }}</h3>
-                                        <span class="px-2 py-1 bg-{{ $eventColor }}-500/20 text-{{ $eventColor }}-400 text-xs rounded-full border border-{{ $eventColor }}-500/30">
+                                        <span class="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-full border border-amber-500/30">
                                             {{ $event->event_type_display }}
                                         </span>
                                     </div>
@@ -152,24 +130,24 @@
                                     </div>
 
                                     <!-- Event Information -->
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-300">
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 text-sm text-gray-300">
                                         <div class="flex items-center">
                                             <i class="fas fa-clock w-5 mr-2 admin-text-muted"></i>
                                             <span>{{ $event->occurred_at->format('M d, Y') }} at {{ $event->occurred_at->format('g:i A') }}</span>
                                         </div>
                                         <div class="flex items-center">
                                             <i class="fas fa-map-marker-alt w-5 mr-2 admin-text-muted"></i>
-                                            <span>{{ $event->ip_address }}@if($event->location) • {{ $event->location }}@endif</span>
+                                            <span class="truncate">{{ $event->ip_address }}@if($event->location) • {{ $event->location }}@endif</span>
                                         </div>
                                         @if($event->device_info && isset($event->device_info['browser']))
                                             <div class="flex items-center">
                                                 <i class="fas fa-globe w-5 mr-2 admin-text-muted"></i>
-                                                <span>{{ $event->device_info['browser'] }}@if(isset($event->device_info['platform'])) • {{ $event->device_info['platform'] }}@endif</span>
+                                                <span class="truncate">{{ $event->device_info['browser'] }}@if(isset($event->device_info['platform'])) • {{ $event->device_info['platform'] }}@endif</span>
                                             </div>
                                         @endif
                                         @if($event->device_info && isset($event->device_info['device_type']))
                                             <div class="flex items-center">
-                                                <i class="fas fa-mobile-alt w-5 mr-2 admin-text-muted"></i>
+                                                <i class="fas fa-laptop w-5 mr-2 admin-text-muted"></i>
                                                 <span class="capitalize">{{ $event->device_info['device_type'] }} Device</span>
                                             </div>
                                         @endif
@@ -184,11 +162,66 @@
                                        target="_blank" 
                                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
                                        title="View IP location details">
-                                        <i class="fas fa-map-marker-alt mr-2"></i>
-                                        Locate IP
+                                        <i class="fas fa-map-marker-alt mr-2"></i>Locate IP
                                     </a>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Layout -->
+                    <div class="sm:hidden p-4 bg-gray-700/20 rounded-lg">
+                        <!-- Header Row -->
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-shield-alt text-amber-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-white font-medium text-base">{{ \Str::limit($event->user->name ?? 'Unknown User', 20) }}</h3>
+                                    <div class="flex items-center mt-1">
+                                        <div class="w-2 h-2 bg-{{ $event->status_color }}-400 rounded-full mr-2"></div>
+                                        <span class="text-{{ $event->status_color }}-400 text-sm">{{ ucfirst($event->status) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <span class="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-full border border-amber-500/30">
+                                {{ \Str::limit($event->event_type_display, 12) }}
+                            </span>
+                        </div>
+                        
+                        <!-- Event Info Grid -->
+                        <div class="space-y-3 mb-4">
+                            <div class="flex items-center text-sm text-gray-300">
+                                <i class="fas fa-clock w-4 mr-2 text-gray-400"></i>
+                                <span>{{ $event->occurred_at->format('M d, Y') }} - {{ $event->occurred_at->format('g:i A') }}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-300">
+                                <i class="fas fa-map-marker-alt w-4 mr-2 text-gray-400"></i>
+                                <span class="truncate">{{ $event->ip_address }}</span>
+                            </div>
+                            @if($event->device_info && isset($event->device_info['browser']))
+                                <div class="flex items-center text-sm text-gray-300">
+                                    <i class="fas fa-globe w-4 mr-2 text-gray-400"></i>
+                                    <span class="truncate">{{ $event->device_info['browser'] }}</span>
+                                </div>
+                            @endif
+                            @if($event->description)
+                                <div class="flex items-center text-sm text-gray-300">
+                                    <i class="fas fa-info-circle w-4 mr-2 text-gray-400"></i>
+                                    <span class="truncate">{{ $event->description }}</span>
+                                </div>
+                            @endif
+                        </div>
+                        
+                        <!-- Action Button -->
+                        <div class="border-t border-gray-600 pt-4">
+                            <a href="https://whatismyipaddress.com/ip/{{ $event->ip_address }}" 
+                               target="_blank" 
+                               class="w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors text-center inline-block">
+                                <i class="fas fa-map-marker-alt mr-2"></i>Locate IP Address
+                            </a>
                         </div>
                     </div>
                 @endforeach

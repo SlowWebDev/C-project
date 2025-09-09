@@ -33,11 +33,14 @@
             <h1 class="admin-page-title">Activity Logs</h1>
             <p class="admin-page-description">Track all system activities and changes</p>
         </div>
+        <div class="text-sm admin-text-muted">
+            <span class="text-white font-medium">{{ $activities->count() }}</span> activities found
+        </div>
     </div>
 
     <!-- Filters -->
     <div class="admin-card">
-        <form method="GET" class="admin-form-row grid-cols-1 md:grid-cols-4">
+        <form method="GET" class="admin-form-row grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="admin-form-group">
                 <label for="action" class="admin-label">Search Actions</label>
                 <input type="text" id="action" name="action" value="{{ request('action') }}" 
@@ -54,14 +57,16 @@
                 <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}" class="admin-input">
             </div>
 
-            <div class="admin-form-group">
-                <label class="admin-label opacity-0">Actions</label>
-                <div class="flex gap-2">
-                    <button type="submit" class="admin-btn-primary">
-                        <i class="fas fa-search"></i>Filter
+            <div class="admin-form-group sm:col-span-2 lg:col-span-1">
+                <label class="admin-label opacity-0 hidden sm:block">Actions</label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <button type="submit" class="admin-btn-primary flex items-center justify-center gap-2">
+                        <i class="fas fa-search"></i>
+                        <span>Filter</span>
                     </button>
-                    <a href="{{ route('admin.security.activity-logs') }}" class="admin-btn-secondary">
-                        <i class="fas fa-times"></i>Clear
+                    <a href="{{ route('admin.security.activity-logs') }}" class="admin-btn-secondary flex items-center justify-center gap-2">
+                        <i class="fas fa-times"></i>
+                        <span>Clear</span>
                     </a>
                 </div>
             </div>
@@ -69,85 +74,83 @@
     </div>
 
     <!-- Activity Logs -->
-    <div class="admin-content-container">
-        <div class="admin-flex-between p-6 border-b border-gray-700">
-            <h2 class="admin-section-title mb-0">
-                <i class="fas fa-history text-blue-400"></i>
-                Activity History
-            </h2>
+    <div class="admin-card">
+        <div class="admin-section-title mb-6">
+            <i class="fas fa-history text-blue-400"></i>
+            Activity History
         </div>
 
         @if($activities->count() > 0)
-            <div class="divide-y divide-gray-700">
+            <div class="space-y-4">
                 @foreach($activities as $activity)
-                    <div class="p-4 hover:bg-gray-700/20 transition-colors">
+                    <!-- Desktop/Tablet Layout -->
+                    <div class="hidden sm:block p-6 bg-gray-700/20 rounded-lg hover:bg-gray-700/30 transition-colors">
                         <div class="flex items-start space-x-4">
-                            <!-- User Avatar -->
-                            <div class="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-purple-500/30 rounded-full flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-user text-blue-400"></i>
+                            <!-- Activity Icon -->
+                            <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-history text-blue-400 text-lg"></i>
                             </div>
 
-                            <!-- Content -->
-                            <div class="flex-1 min-w-0">
-                                <!-- Main Info -->
-                                <div class="flex items-start justify-between mb-2">
-                                    <div class="min-w-0 flex-1">
-                                        <div class="flex items-center gap-3 mb-1">
-                                            <h3 class="text-white font-semibold text-lg">{{ $activity->user->name ?? 'Unknown User' }}</h3>
-                                            @php
-                                                $actionColors = [
-                                                    'created' => 'green',
-                                                    'updated' => 'blue', 
-                                                    'deleted' => 'red',
-                                                    'login' => 'purple',
-                                                    'logout' => 'orange',
-                                                    'password' => 'yellow',
-                                                    'email' => 'cyan'
-                                                ];
-                                                $color = 'gray';
-                                                foreach($actionColors as $action => $actionColor) {
-                                                    if(str_contains(strtolower($activity->action), $action)) {
-                                                        $color = $actionColor;
-                                                        break;
-                                                    }
-                                                }
-                                            @endphp
-                                            <span class="px-3 py-1 bg-{{ $color }}-500/20 text-{{ $color }}-400 text-sm font-medium rounded-full border border-{{ $color }}-500/30">
-                                                {{ ucfirst(str_replace('_', ' ', $activity->action)) }}
-                                            </span>
-                                        </div>
-                                        <p class="text-gray-300 text-base leading-relaxed">
-                                            {{ $activity->description ?: ucfirst(str_replace('_', ' ', $activity->action)) }}
-                                        </p>
-                                    </div>
+                            <!-- Activity Details -->
+                            <div class="flex-1">
+                                <!-- Activity Title -->
+                                <div class="flex items-center gap-3 mb-3">
+                                    <h3 class="text-lg font-semibold text-white">{{ $activity->user->name ?? 'Unknown User' }}</h3>
+                                    <span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full border border-blue-500/30">
+                                        {{ ucfirst(str_replace('_', ' ', $activity->action)) }}
+                                    </span>
                                 </div>
 
-                                <!-- Meta Information -->
-                                <div class="flex items-center gap-4 text-sm text-gray-400 mt-3">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-clock mr-2 text-blue-400"></i>
-                                        <span>{{ $activity->created_at->format('M d, Y') }}</span>
-                                        <span class="mx-1">at</span>
-                                        <span class="font-medium text-white">{{ $activity->created_at->format('g:i A') }}</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-map-marker-alt mr-2 text-green-400"></i>
-                                        <span>{{ $activity->ip_address }}</span>
-                                    </div>
-                                    @if($activity->user_agent)
-                                        <div class="flex items-center">
-                                            <i class="fas fa-desktop mr-2 text-purple-400"></i>
-                                            <span class="truncate max-w-xs" title="{{ $activity->user_agent }}">
-                                                @php
-                                                    $agent = new \Jenssegers\Agent\Agent();
-                                                    $agent->setUserAgent($activity->user_agent);
-                                                    echo $agent->browser() . ' on ' . $agent->platform();
-                                                @endphp
-                                            </span>
-                                        </div>
-                                    @endif
+                                <!-- Description -->
+                                <div class="mb-4">
+                                    <p class="text-gray-300 text-base leading-relaxed">
+                                        {{ $activity->description ?: ucfirst(str_replace('_', ' ', $activity->action)) }}
+                                    </p>
                                 </div>
 
+                                <!-- Activity Information -->
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 text-sm text-gray-300">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock w-5 mr-2 admin-text-muted"></i>
+                                        <span>{{ $activity->created_at->format('M d, Y') }} at {{ $activity->created_at->format('g:i A') }}</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-map-marker-alt w-5 mr-2 admin-text-muted"></i>
+                                        <span class="truncate">{{ $activity->ip_address }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Layout -->
+                    <div class="sm:hidden p-4 bg-gray-700/20 rounded-lg">
+                        <!-- Header Row -->
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-history text-blue-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-white font-medium text-base">{{ \Str::limit($activity->user->name ?? 'Unknown User', 20) }}</h3>
+                                    <p class="text-gray-400 text-sm mt-1">{{ \Str::limit($activity->description ?: ucfirst(str_replace('_', ' ', $activity->action)), 30) }}</p>
+                                </div>
+                            </div>
+                            
+                            <span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full border border-blue-500/30">
+                                {{ \Str::limit(ucfirst(str_replace('_', ' ', $activity->action)), 12) }}
+                            </span>
+                        </div>
+                        
+                        <!-- Activity Info Grid -->
+                        <div class="space-y-3">
+                            <div class="flex items-center text-sm text-gray-300">
+                                <i class="fas fa-clock w-4 mr-2 text-gray-400"></i>
+                                <span>{{ $activity->created_at->format('M d, Y') }} - {{ $activity->created_at->format('g:i A') }}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-300">
+                                <i class="fas fa-map-marker-alt w-4 mr-2 text-gray-400"></i>
+                                <span class="truncate">{{ $activity->ip_address }}</span>
                             </div>
                         </div>
                     </div>

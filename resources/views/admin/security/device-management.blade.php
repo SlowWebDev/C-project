@@ -49,7 +49,8 @@
         @if($devices->count() > 0)
             <div class="space-y-4">
                 @foreach($devices as $device)
-                    <div class="p-6 bg-gray-700/20 rounded-lg {{ $device->device_id === $currentDeviceId ? 'ring-2 ring-blue-500/50 bg-blue-500/5' : '' }} hover:bg-gray-700/30 transition-colors">
+                    <!-- Desktop/Tablet Layout -->
+                    <div class="hidden sm:block p-6 bg-gray-700/20 rounded-lg {{ $device->device_id === $currentDeviceId ? 'ring-2 ring-blue-500/50 bg-blue-500/5' : '' }} hover:bg-gray-700/30 transition-colors">
                         <div class="flex items-start justify-between">
                             <!-- Device Info -->
                             <div class="flex items-start space-x-4 flex-1">
@@ -77,14 +78,14 @@
                                     </div>
 
                                     <!-- Device Information -->
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-300">
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 text-sm text-gray-300">
                                         <div class="flex items-center">
                                             <i class="fas fa-globe w-5 mr-2 admin-text-muted"></i>
-                                            <span>{{ $device->browser }} • {{ $device->operating_system }}</span>
+                                            <span class="truncate">{{ $device->browser }} • {{ $device->operating_system }}</span>
                                         </div>
                                         <div class="flex items-center">
                                             <i class="fas fa-map-marker-alt w-5 mr-2 admin-text-muted"></i>
-                                            <span>{{ $device->ip_address }}@if($device->location) • {{ $device->location }}@endif</span>
+                                            <span class="truncate">{{ $device->ip_address }}@if($device->location) • {{ $device->location }}@endif</span>
                                         </div>
                                         <div class="flex items-center">
                                             <i class="fas fa-clock w-5 mr-2 admin-text-muted"></i>
@@ -100,38 +101,14 @@
 
                             <!-- Actions -->
                             <div class="ml-6 text-right">
-                                <!-- Action Buttons -->
                                 @if($device->device_id !== $currentDeviceId)
                                     <div class="flex gap-2">
-                                        @if(!$device->is_trusted && !$device->is_blocked)
-                                            <form method="POST" action="{{ route('admin.security.device-trust', $device) }}">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors">
-                                                    <i class="fas fa-shield-alt mr-2"></i>
-                                                    Trust
-                                                </button>
-                                            </form>
-                                        @endif
-
-                                        @if($device->is_trusted)
-                                            <form method="POST" action="{{ route('admin.security.device-untrust', $device) }}">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors">
-                                                    <i class="fas fa-times mr-2"></i>
-                                                    Remove Trust
-                                                </button>
-                                            </form>
-                                        @endif
-
                                         @if(!$device->is_blocked)
-                                            <form method="POST" action="{{ route('admin.security.device-block', $device) }}" onsubmit="return confirm('Are you sure you want to block this device?')">
+                                            <form method="POST" action="{{ route('admin.security.device-block', $device) }}">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors">
-                                                    <i class="fas fa-ban mr-2"></i>
-                                                    Block
+                                                    <i class="fas fa-ban mr-2"></i>Block
                                                 </button>
                                             </form>
                                         @else
@@ -139,8 +116,7 @@
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
-                                                    <i class="fas fa-check mr-2"></i>
-                                                    Unblock
+                                                    <i class="fas fa-check mr-2"></i>Unblock
                                                 </button>
                                             </form>
                                         @endif
@@ -148,13 +124,88 @@
                                 @else
                                     <div class="px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg">
                                         <div class="text-blue-400 text-sm font-medium">
-                                            <i class="fas fa-lock mr-1"></i>current device
+                                            <i class="fas fa-lock mr-1"></i>Current Device
                                         </div>
                                     </div>
                                 @endif
                             </div>
                         </div>
-
+                    </div>
+                    
+                    <!-- Mobile Layout -->
+                    <div class="sm:hidden p-4 bg-gray-700/20 rounded-lg {{ $device->device_id === $currentDeviceId ? 'ring-2 ring-blue-500/50 bg-blue-500/5' : '' }}">
+                        <!-- Header Row -->
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-{{ $device->status_color }}-500/20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-{{ $device->device_type === 'mobile' ? 'mobile-alt' : ($device->device_type === 'tablet' ? 'tablet-alt' : 'laptop') }} text-{{ $device->status_color }}-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-white font-medium text-base">{{ Str::limit($device->device_name, 25) }}</h3>
+                                    <div class="flex items-center mt-1">
+                                        <div class="w-2 h-2 bg-{{ $device->status_color }}-400 rounded-full mr-2"></div>
+                                        <span class="text-{{ $device->status_color }}-400 text-sm">{{ $device->status_text }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            @if($device->device_id === $currentDeviceId)
+                                <span class="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full border border-blue-500/30">
+                                    Current
+                                </span>
+                            @endif
+                        </div>
+                        
+                        <!-- Device Info Grid -->
+                        <div class="space-y-3 mb-4">
+                            <div class="flex items-center text-sm text-gray-300">
+                                <i class="fas fa-globe w-4 mr-2 text-gray-400"></i>
+                                <span class="truncate">{{ $device->browser }}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-300">
+                                <i class="fas fa-desktop w-4 mr-2 text-gray-400"></i>
+                                <span class="truncate">{{ $device->operating_system }}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-300">
+                                <i class="fas fa-map-marker-alt w-4 mr-2 text-gray-400"></i>
+                                <span class="truncate">{{ $device->ip_address }}</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-300">
+                                <i class="fas fa-clock w-4 mr-2 text-gray-400"></i>
+                                <span>{{ $device->last_activity_human }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Button -->
+                        @if($device->device_id !== $currentDeviceId)
+                            <div class="border-t border-gray-600 pt-4">
+                                @if(!$device->is_blocked)
+                                    <form method="POST" action="{{ route('admin.security.device-block', $device) }}" class="w-full">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors">
+                                            <i class="fas fa-ban mr-2"></i>Block Device
+                                        </button>
+                                    </form>
+                                @else
+                                    <form method="POST" action="{{ route('admin.security.device-unblock', $device) }}" class="w-full">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+                                            <i class="fas fa-check mr-2"></i>Unblock Device
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @else
+                            <div class="border-t border-gray-600 pt-4">
+                                <div class="w-full px-4 py-3 bg-blue-500/10 border border-blue-500/30 rounded-lg text-center">
+                                    <span class="text-blue-400 font-medium">
+                                        <i class="fas fa-lock mr-2"></i>Current Device
+                                    </span>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @endforeach
             </div>

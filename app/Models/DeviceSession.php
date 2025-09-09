@@ -20,7 +20,6 @@ class DeviceSession extends Model
         'operating_system',
         'ip_address',
         'location',
-        'is_trusted',
         'is_blocked',
         'last_activity',
         'first_seen',
@@ -29,7 +28,6 @@ class DeviceSession extends Model
     ];
 
     protected $casts = [
-        'is_trusted' => 'boolean',
         'is_blocked' => 'boolean',
         'last_activity' => 'datetime',
         'first_seen' => 'datetime',
@@ -117,10 +115,6 @@ class DeviceSession extends Model
         SecurityEvent::logEvent('device_blocked', SecurityEvent::STATUS_SUCCESS, $this->user_id);
     }
 
-    public function trust(): void
-    {
-        $this->update(['is_trusted' => true]);
-    }
 
     public function getLastActivityHumanAttribute(): string
     {
@@ -130,14 +124,12 @@ class DeviceSession extends Model
     public function getStatusColorAttribute(): string
     {
         if ($this->is_blocked) return 'red';
-        if ($this->is_trusted) return 'green';
-        return 'yellow';
+        return 'green';
     }
 
     public function getStatusTextAttribute(): string
     {
         if ($this->is_blocked) return 'Blocked';
-        if ($this->is_trusted) return 'Trusted';
         return 'Active';
     }
 }

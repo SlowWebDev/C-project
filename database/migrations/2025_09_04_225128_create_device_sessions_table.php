@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('operating_system');
             $table->string('ip_address', 45);
             $table->string('location')->nullable();
-            $table->boolean('is_trusted')->default(false);
             $table->boolean('is_blocked')->default(false);
             $table->timestamp('last_activity');
             $table->timestamp('first_seen');
@@ -35,7 +34,6 @@ return new class extends Migration
             $table->index(['user_id', 'last_activity']);
             $table->index(['device_id', 'user_id']);
             $table->index('is_blocked');
-            $table->index('is_trusted');
         });
     }
 
