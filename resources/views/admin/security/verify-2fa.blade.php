@@ -3,29 +3,29 @@
 @section('title', 'Security Verification')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
+<div class="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div class="max-w-md w-full space-y-6 lg:space-y-8">
         <!-- Header -->
         <div class="text-center">
-            <div class="mx-auto h-20 w-20 bg-red-500/20 rounded-full flex items-center justify-center mb-6">
-                <i class="fas fa-shield-alt text-red-400 text-3xl"></i>
+            <div class="mx-auto h-16 w-16 lg:h-20 lg:w-20 bg-blue-500/20 rounded-full flex items-center justify-center mb-4 lg:mb-6">
+                <i class="fas fa-shield-alt text-blue-400 text-2xl lg:text-3xl"></i>
             </div>
-            <h2 class="text-3xl font-bold text-white mb-2">Security Verification</h2>
-            <p class="text-gray-400">Enter your 2FA code to proceed with {{ $actionText }}</p>
+            <h2 class="text-2xl lg:text-3xl font-bold text-white mb-2">Security Verification</h2>
+            <p class="text-gray-400 text-sm lg:text-base px-4">Enter your 2FA code to proceed with {{ $actionText }}</p>
         </div>
 
         <!-- Device Info -->
-        <div class="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+        <div class="bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm">
             <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-laptop text-gray-400"></i>
+                <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-laptop text-blue-400"></i>
                 </div>
                 <div class="flex-1">
                     <h3 class="text-white font-medium">{{ $deviceName }}</h3>
                     <p class="text-sm text-gray-400">Target device for {{ strtolower($actionText) }}</p>
                 </div>
                 <div class="text-right">
-                    <span class="inline-block px-3 py-1 bg-red-500/20 text-red-400 text-xs font-medium rounded-full border border-red-500/30">
+                    <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-medium rounded-full border border-blue-500/30">
                         {{ $pendingAction === 'block_device' ? 'Block' : 'Unblock' }}
                     </span>
                 </div>
@@ -33,7 +33,7 @@
         </div>
 
         <!-- 2FA Form -->
-        <div class="bg-gray-800 rounded-xl p-8 border border-gray-700">
+        <div class="bg-white/5 rounded-xl p-6 lg:p-8 border border-white/10 backdrop-blur-sm">
             <form method="POST" action="{{ route('admin.security.process-2fa') }}" class="space-y-6">
                 @csrf
                 
@@ -46,7 +46,7 @@
                         <input type="text" 
                                id="tfa_code" 
                                name="tfa_code" 
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-center text-2xl tracking-widest placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors @error('tfa_code') border-red-500 focus:border-red-500 focus:ring-red-500/20 @enderror" 
+                               class="w-full px-4 py-3 lg:py-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-xl lg:text-2xl tracking-widest placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 backdrop-blur-sm @error('tfa_code') border-red-500 focus:border-red-500 focus:ring-red-500/20 @enderror" 
                                placeholder="000000"
                                maxlength="6"
                                pattern="[0-9]{6}"
@@ -66,7 +66,7 @@
                         <input type="password" 
                                id="password" 
                                name="password" 
-                               class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors @error('password') border-red-500 focus:border-red-500 focus:ring-red-500/20 @enderror" 
+                               class="w-full px-4 py-3 lg:py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 backdrop-blur-sm @error('password') border-red-500 focus:border-red-500 focus:ring-red-500/20 @enderror" 
                                placeholder="Enter your password"
                                autocomplete="current-password"
                                required
@@ -76,8 +76,8 @@
                             Enter your current password to confirm this security action
                         </p>
                         
-                        <div class="mt-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
-                            <p class="text-xs text-amber-300 text-center">
+                        <div class="mt-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg backdrop-blur-sm">
+                            <p class="text-xs text-blue-300 text-center">
                                 <i class="fas fa-info-circle mr-1"></i>
                                 Two-factor authentication not set up. Using password verification as fallback.
                                 <a href="{{ route('admin.2fa.setup') }}" class="underline hover:no-underline">Set up 2FA</a>
@@ -99,14 +99,14 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex space-x-4">
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
                     <a href="{{ route('admin.security.device-management') }}" 
-                       class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center">
+                       class="flex-1 bg-gray-600/80 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 text-center backdrop-blur-sm">
                         <i class="fas fa-times mr-2"></i>Cancel
                     </a>
                     
                     <button type="submit" 
-                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-[0.99] shadow-lg">
                         <i class="fas fa-shield-alt mr-2"></i>Verify & {{ $pendingAction === 'block_device' ? 'Block' : 'Unblock' }}
                     </button>
                 </div>

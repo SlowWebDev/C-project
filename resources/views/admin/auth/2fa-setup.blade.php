@@ -4,25 +4,25 @@
 
 @section('content')
 <div class="min-h-screen flex flex-col lg:flex-row">
-    <div class="flex-1 lg:flex-none lg:w-1/2 flex items-center justify-center px-8 py-16 bg-auth-left">
-        <div class="w-full max-w-lg space-y-8">
+    <div class="flex-1 lg:flex-none lg:w-1/2 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <div class="w-full max-w-lg space-y-6 lg:space-y-8">
             <div class="text-center">
-                <h1 class="text-white font-extralight text-3xl lg:text-4xl tracking-wide mb-4">
+                <h1 class="text-white font-extralight text-2xl sm:text-3xl lg:text-4xl tracking-wide mb-3 lg:mb-4">
                     Setup Two-Factor Authentication
                 </h1>
-                <p class="text-gray-400 text-base leading-relaxed font-light">
+                <p class="text-gray-400 text-sm sm:text-base leading-relaxed font-light px-2">
                     Add extra security to your account by enabling 2FA
                 </p>
             </div>
             
             @if(session('success'))
-                <div class="p-3 bg-green-500/10 border border-green-500/30 rounded-lg backdrop-blur-sm">
+                <div class="p-3 lg:p-4 bg-green-500/10 border border-green-500/30 rounded-lg backdrop-blur-sm">
                     <p class="text-sm text-green-200">{{ session('success') }}</p>
                 </div>
             @endif
             
             @if(session('error'))
-                <div class="p-3 bg-red-500/10 border border-red-500/30 rounded-lg backdrop-blur-sm">
+                <div class="p-3 lg:p-4 bg-red-500/10 border border-red-500/30 rounded-lg backdrop-blur-sm">
                     <p class="text-sm text-red-200">{{ session('error') }}</p>
                 </div>
             @endif
@@ -53,7 +53,7 @@
                         Enter 6-digit code from your app:
                     </label>
                     <input type="text" id="code" name="code" 
-                           class="w-full px-6 py-4 text-white placeholder-gray-400 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-center text-2xl font-mono tracking-widest backdrop-blur-sm"
+                           class="w-full px-4 lg:px-6 py-3 lg:py-4 text-white placeholder-gray-400 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-center text-2xl font-mono tracking-widest backdrop-blur-sm"
                            placeholder="000000" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" required autofocus>
                     
                     @error('code')
@@ -61,7 +61,7 @@
                     @enderror
                 </div>
 
-                <button type="submit" class="w-full py-4 px-6 text-white font-medium bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 active:from-blue-800 active:to-blue-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-300 transform hover:scale-[0.99] shadow-lg">
+                <button type="submit" class="w-full py-3 lg:py-4 px-6 text-white font-medium bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-300 transform hover:scale-[0.99] shadow-lg">
                     Enable Two-Factor Authentication
                 </button>
             </form>
@@ -77,20 +77,20 @@
         </div>
     </div>
     
-    <div class="flex-1 lg:flex-none lg:w-1/2 flex items-center justify-center px-8 py-16 bg-auth-right relative">
+    <div class="flex-1 lg:flex-none lg:w-1/2 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 lg:py-16 bg-gradient-to-br from-gray-800 to-gray-700 relative">
         <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5"></div>
         <div class="text-center max-w-lg w-full relative z-10">
             
-            <h3 class="text-2xl font-light text-white mb-16">Scan QR Code</h3>
+            <h3 class="text-xl lg:text-2xl font-light text-white mb-8 lg:mb-16">Scan QR Code</h3>
             
-            <div class="mb-16">
-                <div class="bg-white p-6 rounded-3xl shadow-2xl inline-block">
+            <div class="mb-8 lg:mb-16">
+                <div class="bg-white p-4 lg:p-6 rounded-3xl shadow-2xl inline-block">
                     @if(!empty($qrCodeImage))
-                        <img src="{{ $qrCodeImage }}" alt="2FA QR Code" class="w-56 h-56 block">
+                        <img src="{{ $qrCodeImage }}" alt="2FA QR Code" class="w-48 h-48 lg:w-56 lg:h-56 block">
                     @elseif(!empty($qrCodeBackup))
-                        <img src="{{ $qrCodeBackup }}" alt="2FA QR Code (Backup)" class="w-56 h-56 block">
+                        <img src="{{ $qrCodeBackup }}" alt="2FA QR Code (Backup)" class="w-48 h-48 lg:w-56 lg:h-56 block">
                     @else
-                        <div class="w-56 h-56 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center">
+                        <div class="w-48 h-48 lg:w-56 lg:h-56 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center">
                             <div class="text-center text-gray-500">
                                 <div class="w-12 h-12 bg-gray-400 rounded-lg mx-auto mb-3"></div>
                                 <p class="text-sm">QR Code Unavailable</p>

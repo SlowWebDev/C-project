@@ -644,6 +644,15 @@
     white-space: pre-wrap;
 }
 
+/* ===== AUTH BACKGROUNDS ===== */
+.bg-auth-left {
+    background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%);
+}
+
+.bg-auth-right {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #1f2937 100%);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .admin-main-content {
