@@ -8,10 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * Admin Project Controller - Real Estate Projects Management
+ * 
+ * Handles CRUD operations for projects with image galleries and facilities
+ * 
+ * @author SlowWebDev
+ */
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the projects
+     * Display paginated list of all projects
      */
     public function index()
     {
@@ -20,7 +27,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show form for creating a new project
+     * Show project creation form with available facilities
      */
     public function create()
     {

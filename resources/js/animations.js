@@ -1,4 +1,11 @@
-
+/**
+ * Animations - AOS and GSAP Setup
+ * 
+ * Provides scroll-based animations and counters for stats section,
+ * plus general enter animations.
+ * 
+ * Author: SlowWebDev
+ */
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import gsap from 'gsap';

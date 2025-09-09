@@ -10,8 +10,18 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Admin Unified SEO Controller - Site-Wide SEO Settings
+ * 
+ * Manage meta tags, OG tags, canonical, sitemap per page and global settings
+ * 
+ * @author SlowWebDev
+ */
 class UnifiedSeoController extends Controller
 {
+    /**
+     * Show unified SEO settings page
+     */
     public function index()
     {
         $seo = UnifiedSeo::getInstance();

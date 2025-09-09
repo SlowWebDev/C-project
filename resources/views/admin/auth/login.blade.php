@@ -1,3 +1,12 @@
+{{--
+    Admin Login & Registration Page
+    
+    Handles both first-time admin registration and subsequent logins.
+    Features split-screen design with secure form validation.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.auth')
 
 @section('content')

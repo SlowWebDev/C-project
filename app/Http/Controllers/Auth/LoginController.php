@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Auth Login Controller - Admin Authentication
+ * 
+ * Handles login, logout, and initial admin registration with 2FA integration
+ * 
+ * @author SlowWebDev
+ */
 class LoginController extends Controller
 {
     /**

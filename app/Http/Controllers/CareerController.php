@@ -8,8 +8,18 @@ use Illuminate\Http\Request;
 use App\Http\Helpers\FileSecurityChecker;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Career Controller - Jobs & Applications
+ * 
+ * Handle job listings and application submissions with CV uploads
+ * 
+ * @author SlowWebDev
+ */
 class CareerController extends Controller
 {
+    /**
+     * Show active job openings
+     */
     public function index()
     {
         $jobs = Job::where('is_active', true)->get();

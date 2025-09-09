@@ -1,3 +1,12 @@
+{{--
+    Admin Media Index - Media Library Management
+    
+    Displays all media items (news/events) with CRUD operations,
+    status filtering, and publication controls.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.admin')
 
 @section('title', 'Media Management')

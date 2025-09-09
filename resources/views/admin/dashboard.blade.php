@@ -1,3 +1,12 @@
+{{--
+    Admin Dashboard - Main Overview Page
+    
+    Displays system statistics, logo management, footer settings,
+    and quick access to site configuration.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.admin')
 
 @section('title', 'Dashboard Overview')
@@ -12,7 +21,7 @@
 </div>
 
 
-    <!-- Stats Overview -->
+    {{-- System Statistics Overview --}}
     <div class="admin-stats-grid">
         <div class="admin-stat-card">
             <div class="admin-stat-icon admin-stat-icon-blue">
@@ -55,7 +64,7 @@
         </div>
     </div>
 
-    <!-- Logo Management Section -->
+    {{-- Website Logo Management --}}
     <div class="admin-card mb-8">
         <div class="admin-flex-between mb-6">
             <h2 class="text-xl font-semibold text-white">Website Logos</h2>
@@ -101,7 +110,7 @@
         </div>
     </div>
 
-    <!-- Footer Settings Section -->
+    {{-- Footer Configuration --}}
     <div class="admin-card mb-8">
         <div class="admin-flex-between mb-2">
             <h2 class="text-xl font-semibold text-white">Footer Settings</h2>

@@ -1,3 +1,12 @@
+{{--
+    404 Error Page - Page Not Found
+    
+    Displays user-friendly 404 error with navigation back to home.
+    Includes custom styling and responsive design.
+    
+    Author: SlowWebDev
+--}}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">

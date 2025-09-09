@@ -1,3 +1,12 @@
+{{--
+    Admin 2FA Verification Page
+    
+    Prompts users to enter their 6-digit TOTP code after login.
+    Required for all admin accounts with 2FA enabled.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.auth')
 
 @section('title', 'Two-Factor Authentication')

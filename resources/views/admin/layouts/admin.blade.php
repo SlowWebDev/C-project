@@ -1,3 +1,12 @@
+{{--
+    Admin Panel Layout - Main Dashboard Structure
+    
+    Provides the complete admin interface with responsive sidebar navigation,
+    mobile menu, user authentication status, and admin-specific styling.
+    
+    Author: SlowWebDev
+--}}
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -8,18 +17,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css','resources/css/admin.css', 'resources/js/admin.js'])
 <body class="bg-gray-900">
+    {{-- Main Admin Container --}}
     <div class="min-h-screen flex">
-        <!-- Mobile Menu Button -->
+        {{-- Mobile Navigation Toggle --}}
         <button id="mobile-menu-button" class="fixed top-4 right-4 z-50 md:hidden bg-gray-800/90 backdrop-blur-sm text-white p-3 rounded-lg shadow-lg border border-gray-600">
             <i class="fas fa-bars" id="menu-icon"></i>
         </button>
 
-        <!-- Sidebar Overlay -->
+        {{-- Mobile Backdrop Overlay --}}
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden hidden transition-opacity duration-300"></div>
 
-        <!-- Sidebar -->
+        {{-- Main Admin Sidebar --}}
         <aside id="sidebar" class="fixed right-0 top-0 w-64 h-full bg-gray-800 border-l border-gray-700 transform translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col">
-            <!-- Fixed Header -->
+            {{-- Mobile Sidebar Header --}}
             <div class="flex-shrink-0 p-4 border-b border-gray-700 md:hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-semibold text-white">
@@ -31,14 +41,14 @@
                 </div>
             </div>
             
-            <!-- Desktop Fixed Header -->
+            {{-- Desktop Sidebar Header --}}
             <div class="hidden md:block flex-shrink-0 p-4 border-b border-gray-700">
                 <h2 class="text-lg font-semibold text-white">
                     Admin Panel
                 </h2>
             </div>
 
-            <!-- Scrollable Navigation -->
+            {{-- Main Navigation Menu --}}
             <nav class="flex-1 overflow-y-auto mt-4 px-3 space-y-1 pb-4">
                 <a href="{{ route('admin.dashboard') }}" 
                    class="flex items-center px-3 py-3 mx-1 text-gray-300 rounded-lg transition-all hover:bg-gray-700 hover:text-white group
@@ -47,7 +57,7 @@
                     <span class="font-medium">Dashboard</span>
                 </a>
                 
-                <!-- Pages Management Dropdown -->
+                {{-- Pages Management Section --}}
                 <div class="admin-dropdown mx-1">
                     <button class="admin-dropdown-trigger flex items-center w-full px-3 py-3 text-gray-300 rounded-lg transition-all hover:bg-gray-700 hover:text-white group
                            {{ request()->routeIs('admin.pages.*') ? 'bg-blue-600 text-white shadow-lg' : '' }}" data-dropdown="pages">
@@ -132,7 +142,7 @@
                     <span class="font-medium">SEO Manager</span>
                 </a>
                 
-                <!-- Security Dropdown -->
+                {{-- Security Management Section --}}
                 <div class="admin-dropdown mx-1">
                     <button class="admin-dropdown-trigger flex items-center w-full px-3 py-3 text-gray-300 rounded-lg transition-all hover:bg-gray-700 hover:text-white group
                            {{ request()->routeIs('admin.security.*') ? 'bg-blue-600 text-white shadow-lg' : '' }}" data-dropdown="security">
@@ -177,7 +187,7 @@
                 </div>
             </nav>
 
-            <!-- Fixed User Menu -->
+            {{-- User Profile & Logout Section --}}
             <div class="flex-shrink-0 bg-gray-900 border-t border-gray-700">
                 <div class="p-4">
                     <div class="flex items-center justify-between text-gray-300">

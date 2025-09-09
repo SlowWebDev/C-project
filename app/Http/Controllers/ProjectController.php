@@ -6,8 +6,18 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Project Controller - Public Projects Showcase
+ * 
+ * Display published projects categorized by commercial/residential
+ * 
+ * @author SlowWebDev
+ */
 class ProjectController extends Controller
 {
+    /**
+     * Show all published projects grouped by category
+     */
     public function index()
     {
         $projects = [

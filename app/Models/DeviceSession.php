@@ -7,10 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Jenssegers\Agent\Agent;
 
+/**
+ * DeviceSession Model - Device Management & Security
+ * 
+ * Tracks user devices for security monitoring and access control
+ * 
+ * @author SlowWebDev
+ */
 class DeviceSession extends Model
 {
     use HasFactory;
 
+    /**
+     * Fields that can be mass assigned
+     */
     protected $fillable = [
         'user_id',
         'device_id',
@@ -27,6 +37,9 @@ class DeviceSession extends Model
         'metadata',
     ];
 
+    /**
+     * Cast attributes to proper types
+     */
     protected $casts = [
         'is_blocked' => 'boolean',
         'last_activity' => 'datetime',
@@ -36,6 +49,13 @@ class DeviceSession extends Model
         'updated_at' => 'datetime',
     ];
 
+    // ======================================================================
+    // MODEL RELATIONSHIPS
+    // ======================================================================
+
+    /**
+     * User that owns this device
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

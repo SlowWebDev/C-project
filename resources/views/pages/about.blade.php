@@ -1,3 +1,12 @@
+{{--
+    About Page - Company Information
+    
+    Displays company banner and detailed information about 
+    the organization, history, and values.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('layouts.app')
 
 @section('title', 'About Us ')

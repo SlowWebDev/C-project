@@ -1,3 +1,12 @@
+{{--
+    419 Error Page - Session Expired
+    
+    Handles CSRF token expiration with session cleanup and 
+    redirect functionality back to home page.
+    
+    Author: SlowWebDev
+--}}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">

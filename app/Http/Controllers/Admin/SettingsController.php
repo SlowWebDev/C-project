@@ -7,6 +7,13 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Admin Settings Controller - Global Site Settings
+ * 
+ * Handles logo uploads and footer/social settings
+ * 
+ * @author SlowWebDev
+ */
 class SettingsController extends Controller
 {
     /**

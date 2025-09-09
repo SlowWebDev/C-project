@@ -10,10 +10,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
+/**
+ * Admin Media Controller - News & Press Assets
+ * 
+ * Manages media posts with main image and gallery support
+ * 
+ * @author SlowWebDev
+ */
 class MediaController extends Controller
 {
     /**
-     * Display a listing of the media items
+     * Display paginated list of media items
      */
     public function index()
     {

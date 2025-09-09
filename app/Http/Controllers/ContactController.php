@@ -7,10 +7,21 @@ use App\Models\Contact;
 use App\Models\Project;
 use App\Models\Setting;
 
+/**
+ * ContactController - Contact Form & Inquiries
+ * 
+ * Handles contact form submissions and project inquiries with rate limiting
+ * 
+ * @author SlowWebDev
+ */
 class ContactController extends Controller
 {
+    /**
+     * Display contact page with settings
+     */
     public function index()
     {
+        // Load contact page settings from database
         $contactSettings = [
             'contact_title' => Setting::get('contact_information_title', 'Contact Information'),
             'address_title' => Setting::get('contact_address_title', 'Our Address'),
@@ -25,8 +36,13 @@ class ContactController extends Controller
         return view('pages.contact', compact('contactSettings'));
     }
 
+    /**
+     * Process contact form submission
+     * Includes rate limiting to prevent spam
+     */
     public function store(Request $request)
     {
+        // Validate form input
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -51,10 +67,10 @@ class ContactController extends Controller
             return redirect()->back()->with('error', 'Please wait before sending another message.');
         }
 
-        // Store in cache for 10 minutes
+        // Store in cache for 10 minutes to prevent duplicate submissions
         cache()->put($cacheKey, true, now()->addMinutes(10));
 
-        // Save to database
+        // Save contact to database
         Contact::create([
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
@@ -66,10 +82,12 @@ class ContactController extends Controller
             'status' => 'new',
         ]);
 
+        // Set success message based on inquiry type
         $successMessage = $validated['type'] === 'project_inquiry'
             ? 'Thank you for your project inquiry. We will contact you soon with details.'
             : 'Thank you for contacting us. We will get back to you soon.';
 
+        // Handle AJAX vs regular form submission
         if ($request->ajax() || $request->expectsJson()) {
             return response()->json([
                 'success' => true,
@@ -81,7 +99,8 @@ class ContactController extends Controller
     }
 
     /**
-     * Store project inquiry from project show page
+     * Handle project inquiry from individual project pages
+     * Automatically sets project_id and creates appropriate message
      */
     public function storeProjectInquiry(Request $request, $projectId)
     {
@@ -92,13 +111,13 @@ class ContactController extends Controller
             'phone' => 'required|string|max:20',
         ]);
 
-        // Add project info to validated data
+        // Add project information to the inquiry
         $validated['project_id'] = $projectId;
         $validated['type'] = 'project_inquiry';
         $project = Project::find($projectId);
         $validated['message'] = "Project inquiry for: " . ($project ? $project->title : 'Unknown Project');
 
-        // Use the same store method but with modified request
+        // Reuse the main store method with modified request
         $request->merge($validated);
         return $this->store($request);
     }

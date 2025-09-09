@@ -11,15 +11,19 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use PragmaRX\Google2FA\Google2FA;
 
+/**
+ * User Model - Admin Authentication System
+ * 
+ * Handles admin user authentication with two-factor security
+ * 
+ * @author SlowWebDev
+ */
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
+     * Fields that can be mass assigned
      */
     protected $fillable = [
         'name',
@@ -30,9 +34,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
+     * Hide sensitive data from API responses
      */
     protected $hidden = [
         'password',
@@ -41,9 +43,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Cast attributes to proper types
      */
     protected function casts(): array
     {
@@ -55,6 +55,13 @@ class User extends Authenticatable
         ];
     }
 
+    // ======================================================================
+    // TWO-FACTOR AUTHENTICATION METHODS
+    // ======================================================================
+
+    /**
+     * Generate new 2FA secret key for user
+     */
     public function generateTwoFactorSecret()
     {
         $google2fa = new Google2FA();
@@ -66,15 +73,22 @@ class User extends Authenticatable
         return $secret;
     }
 
+    /**
+     * Get decrypted 2FA secret
+     */
     public function getTwoFactorSecret()
     {
         return $this->two_factor_secret ? $this->decryptTwoFactorSecret($this->two_factor_secret) : null;
     }
 
+    /**
+     * Verify 6-digit 2FA code
+     * @param string $code - 6 digit code from authenticator app
+     * @param bool $allowSetup - allow verification during setup process
+     */
     public function verifyTwoFactorCode($code, $allowSetup = false)
     {
-        // In setup mode, only require secret exists
-        // In normal mode, require both secret and enabled status
+        // Check if 2FA is properly configured
         if (!$allowSetup && (!$this->two_factor_secret || !$this->two_factor_enabled)) {
             return false;
         }
@@ -83,8 +97,8 @@ class User extends Authenticatable
             return false;
         }
         
+        // Clean and validate code format
         $code = preg_replace('/[^0-9]/', '', $code);
-        
         if (strlen($code) !== 6) {
             return false;
         }
@@ -100,6 +114,9 @@ class User extends Authenticatable
         return $google2fa->verifyKey($secret, $code, 2);
     }
 
+    /**
+     * Enable 2FA for this user
+     */
     public function enableTwoFactor()
     {
         $this->update([
@@ -108,11 +125,17 @@ class User extends Authenticatable
         ]);
     }
 
+    /**
+     * Check if 2FA is fully enabled and configured
+     */
     public function hasTwoFactorEnabled()
     {
         return $this->two_factor_enabled && $this->two_factor_secret;
     }
 
+    /**
+     * Disable 2FA and clear all related data
+     */
     public function disableTwoFactor()
     {
         $this->update([
@@ -122,11 +145,17 @@ class User extends Authenticatable
         ]);
     }
 
+    /**
+     * Encrypt 2FA secret for database storage
+     */
     private function encryptTwoFactorSecret($secret)
     {
         return Crypt::encrypt($secret);
     }
 
+    /**
+     * Decrypt 2FA secret from database
+     */
     private function decryptTwoFactorSecret($encryptedSecret)
     {
         try {
@@ -136,16 +165,29 @@ class User extends Authenticatable
         }
     }
 
+    // ======================================================================
+    // MODEL RELATIONSHIPS
+    // ======================================================================
+
+    /**
+     * User activity logs relationship
+     */
     public function activityLogs()
     {
         return $this->hasMany(ActivityLog::class);
     }
 
+    /**
+     * User security events relationship
+     */
     public function securityEvents()
     {
         return $this->hasMany(SecurityEvent::class);
     }
 
+    /**
+     * User device sessions relationship
+     */
     public function deviceSessions()
     {
         return $this->hasMany(DeviceSession::class);

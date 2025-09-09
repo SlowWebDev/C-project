@@ -5,15 +5,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Setting Model - Site Configuration Storage
+ * 
+ * Key-value store for site settings, logos, and configuration
+ * 
+ * @author SlowWebDev
+ */
 class Setting extends Model
 {
+    /**
+     * Fields that can be mass assigned
+     */
     protected $fillable = ['key', 'value'];
 
-    // Define logo types as constants
+    /**
+     * Logo type constants
+     */
     const LOGO_DEFAULT = 'logo';
     const LOGO_LIGHT = 'logo-light';
     const LOGO_DARK = 'logo-footer';
 
+    // ======================================================================
+    // STATIC HELPER METHODS
+    // ======================================================================
+
+    /**
+     * Get setting value by key
+     */
     public static function get($key, $default = null)
     {
         $setting = self::where('key', $key)->first();

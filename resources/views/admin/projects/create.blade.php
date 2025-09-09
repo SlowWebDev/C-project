@@ -1,3 +1,12 @@
+{{--
+    Admin Create Project - Project Creation Form
+    
+    Comprehensive form for creating new projects with main image,
+    gallery, facilities selection, and rich text description.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.admin')
 
 @section('title', 'Add New Project')
@@ -55,7 +64,7 @@
             </div>
         </div>
 
-        <!-- Facilities -->
+        {{-- Project Facilities Selection --}}
         <div class="admin-form-group">
             <label class="admin-label">Facilities</label>
             <div class="admin-checkbox-group">
@@ -128,7 +137,7 @@
             @enderror
         </div>
 
-        <!-- Main Image -->
+        {{-- Main Project Image Upload --}}
         <div class="admin-form-group">
             <label class="admin-label admin-label-required">Main Project Image</label>
             <div class="admin-file-upload">
@@ -162,7 +171,7 @@
             </div>
         </div>
 
-        <!-- Gallery -->
+        {{-- Project Gallery (Multiple Images) --}}
         <div class="admin-form-group">
             <label class="admin-label">Project Gallery</label>
             <div class="admin-file-upload">

@@ -1,3 +1,13 @@
+/**
+ * Main Application JavaScript - Frontend Core
+ * 
+ * Handles all frontend functionality including mobile menu, sliders,
+ * phone inputs, and image gallery interactions.
+ * 
+ * @author SlowWebDev
+ */
+
+// ===== IMPORTS =====
 import './bootstrap';
 import Swiper from 'swiper';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
@@ -6,26 +16,25 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'aos/dist/aos.css';
 import './animations';
-// Icons
 import '@fortawesome/fontawesome-free/css/all.css';
 import intlTelInput from 'intl-tel-input';
 import 'intl-tel-input/build/css/intlTelInput.css';
 import Alpine from 'alpinejs';
 
-// Initialize Alpine.js
+// ===== ALPINE.JS INITIALIZATION =====
 window.Alpine = Alpine;
 Alpine.start();
 
-// Mobile Menu
+// ===== MOBILE MENU HANDLER =====
 const menu = document.querySelector('.mobile-menu');
 const overlay = document.querySelector('.mobile-menu-overlay');
 const toggleBtn = document.querySelector('.mobile-menu-toggle');
 const closeBtn = document.querySelector('.mobile-menu-close');
-
-
+// Mobile menu toggle functionality
 if (menu && toggleBtn) {
     let isOpen = false;
 
+    // Toggle menu visibility with smooth animations
     const toggle = (show) => {
         if (isOpen === show) return;
         isOpen = show;
@@ -37,6 +46,7 @@ if (menu && toggleBtn) {
         }
     };
 
+    // Event listeners for menu interactions
     toggleBtn.addEventListener('click', e => { e.stopPropagation(); toggle(true); });
     closeBtn?.addEventListener('click', e => { e.stopPropagation(); toggle(false); });
     overlay?.addEventListener('click', () => toggle(false));
@@ -45,10 +55,9 @@ if (menu && toggleBtn) {
     window.addEventListener('resize', () => window.innerWidth >= 1024 && isOpen && toggle(false));
     menu.addEventListener('click', e => e.stopPropagation());
 }
+// ===== SWIPER SLIDERS INITIALIZATION =====
 
-
-    // Hero Swiper
-
+// Hero image slider with autoplay and pagination
 new Swiper('.hero-swiper', {
     modules: [Autoplay, Pagination],
     loop: true,
@@ -59,7 +68,7 @@ new Swiper('.hero-swiper', {
     lazy: true,
 });
 
-    // Projects Swiper
+// Projects showcase slider with responsive breakpoints
 new Swiper('.projects-swiper', {
     modules: [Navigation, Autoplay],
     loop: true,
@@ -73,8 +82,8 @@ new Swiper('.projects-swiper', {
         1280: { slidesPerView: 3, spaceBetween: 40 }
     }
 });
-// Partners Infinite Loop
 
+// Partners continuous infinite loop slider
 new Swiper('.partners-swiper', {
     modules: [Autoplay],
     loop: true,
@@ -93,7 +102,8 @@ new Swiper('.partners-swiper', {
         1024: { slidesPerView: 3 }
     }
 });
-//  Media & News Swiper
+
+// Media and news slider with navigation arrows
 new Swiper('.media-news-swiper', {
     modules: [Navigation],
     slidesPerView: 1,
@@ -105,11 +115,12 @@ new Swiper('.media-news-swiper', {
     }
 });
 
-// Initialize phone inputs
+// ===== INTERNATIONAL PHONE INPUT INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', function() {
     const phoneInputs = document.querySelectorAll('.phone-input');
     phoneInputs.forEach(phoneInput => {
         if (phoneInput) {
+            // Initialize international phone input with MENA region focus
             const iti = intlTelInput(phoneInput, {
                 initialCountry: 'eg',
                 preferredCountries: ['eg', 'sa', 'ae', 'kw', 'qa', 'bh', 'om'],
@@ -120,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
             });
 
-            // Style adjustments for the container
+            // Apply responsive styling to phone input container
             const container = phoneInput.closest('.iti');
             if (container) {
                 container.style.display = 'block';
@@ -130,20 +141,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
-
-// Gallery Modal
+// ===== GALLERY MODAL SYSTEM =====
 const galleryModal = {
     modal: null,
     image: null,
     images: [],
     currentIndex: 0,
     
+    // Initialize modal with keyboard navigation
     init() {
         this.modal = document.getElementById('gallery-modal');
         this.image = document.getElementById('modal-image');
         
-        // Event Listeners
+        // Setup keyboard navigation for modal
         document.addEventListener('keydown', e => {
             if (!this.modal?.classList.contains('hidden')) {
                 const keys = { 
@@ -156,6 +166,7 @@ const galleryModal = {
         });
     },
 
+    // Open modal with specific image and preload adjacent images
     open(src, index) {
         this.images = [...document.querySelectorAll('#gallery-grid img')].map(img => img.src);
         this.currentIndex = index;
@@ -163,13 +174,14 @@ const galleryModal = {
         this.modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
         
-        // Preload adjacent images
+        // Preload adjacent images for smooth navigation
         [-1, 1].forEach(offset => {
             const img = new Image();
             img.src = this.images[(index + offset + this.images.length) % this.images.length];
         });
     },
 
+    // Close modal with fade transition
     close() {
         this.fadeTransition(() => {
             this.modal.classList.add('hidden');
@@ -177,6 +189,7 @@ const galleryModal = {
         });
     },
 
+    // Navigate between images with direction (-1 or 1)
     navigate(direction) {
         this.fadeTransition(() => {
             this.currentIndex = (this.currentIndex + direction + this.images.length) % this.images.length;
@@ -184,6 +197,7 @@ const galleryModal = {
         });
     },
 
+    // Smooth fade transition between images
     fadeTransition(callback) {
         this.image.classList.add('scale-95', 'opacity-0');
         setTimeout(() => {
@@ -193,10 +207,10 @@ const galleryModal = {
     }
 };
 
-// Initialize gallery modal
+// Initialize gallery modal when DOM is ready
 document.addEventListener('DOMContentLoaded', () => galleryModal.init());
 
-// Make functions globally available
+// ===== GLOBAL FUNCTIONS FOR TEMPLATE USE =====
 window.openGalleryModal = (src, index) => galleryModal.open(src, index);
 window.closeGalleryModal = () => galleryModal.close();
 window.changeImage = (direction) => galleryModal.navigate(direction);

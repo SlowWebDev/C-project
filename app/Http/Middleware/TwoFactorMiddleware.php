@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * TwoFactor Middleware - 2FA Enforcement
+ * 
+ * Ensures users complete 2FA setup and verification before accessing protected routes
+ * 
+ * @author SlowWebDev
+ */
 class TwoFactorMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Enforce 2FA setup and verification for authenticated users
      */
     public function handle(Request $request, Closure $next): Response
     {

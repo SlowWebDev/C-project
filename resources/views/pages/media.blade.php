@@ -1,3 +1,12 @@
+{{--
+    Media Page - News and Events Gallery
+    
+    Displays media banner and gallery of published media items 
+    including news, events, and company updates.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('layouts.app')
 
 @section('title', 'Media Center')

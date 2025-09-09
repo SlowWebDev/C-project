@@ -6,10 +6,17 @@ use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Media Controller - Public Media Gallery
+ * 
+ * Display published media items for frontend visitors
+ * 
+ * @author SlowWebDev
+ */
 class MediaController extends Controller
 {
     /**
-     * Display a listing of the media items
+     * Show all published media items
      */
     public function index()
     {

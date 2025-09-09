@@ -5,14 +5,17 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
+/**
+ * Security Headers Middleware - HTTP Security Headers
+ * 
+ * Adds security headers to protect against XSS, clickjacking, and other attacks
+ * 
+ * @author SlowWebDev
+ */
 class SecurityHeaders
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * Add security headers to all responses
      */
     public function handle(Request $request, Closure $next)
     {

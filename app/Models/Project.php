@@ -6,8 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * Project Model - Real Estate Projects Management
+ * 
+ * Handles residential and commercial projects with galleries and facilities
+ * 
+ * @author SlowWebDev
+ */
 class Project extends Model
 {
+    /**
+     * Fields that can be mass assigned
+     */
     protected $fillable = [
         'title',
         'slug',
@@ -21,17 +31,27 @@ class Project extends Model
         'status'
     ];
 
+    /**
+     * Default values for new projects
+     */
     protected $attributes = [
         'status' => 'draft' 
     ];
     
+    /**
+     * Cast attributes to proper types
+     */
     protected $casts = [
         'gallery' => 'array',
         'facilities' => 'array'
     ];
 
+    // ======================================================================
+    // FACILITY MANAGEMENT METHODS
+    // ======================================================================
+
     /**
-     * Get default facilities list
+     * Get list of all available facilities with icons
      */
     public static function getAvailableFacilities()
     {
@@ -60,19 +80,35 @@ class Project extends Model
         return in_array($facilityName, $this->facilities);
     }
 
+    // ======================================================================
+    // ACCESSOR METHODS
+    // ======================================================================
+
+    /**
+     * Get full URL for project main image
+     */
     public function getImageUrlAttribute()
     {
         return $this->image ? Storage::url($this->image) : null;
     }
 
+    // ======================================================================
+    // QUERY SCOPES
+    // ======================================================================
+
+    /**
+     * Get only published projects
+     */
     public function scopePublished($query)
     {
         return $query->where('status', 'published');
     }
     
+    /**
+     * Get only draft projects
+     */
     public function scopeDraft($query)
     {
         return $query->where('status', 'draft');
     }
-
 }

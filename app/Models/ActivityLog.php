@@ -6,10 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * ActivityLog Model - Admin Activity Tracking
+ * 
+ * Records all admin actions for audit and monitoring purposes
+ * 
+ * @author SlowWebDev
+ */
 class ActivityLog extends Model
 {
     use HasFactory;
 
+    /**
+     * Fields that can be mass assigned
+     */
     protected $fillable = [
         'user_id',
         'action',
@@ -22,6 +32,9 @@ class ActivityLog extends Model
         'description',
     ];
 
+    /**
+     * Cast attributes to proper types
+     */
     protected $casts = [
         'old_values' => 'array',
         'new_values' => 'array',
@@ -29,6 +42,13 @@ class ActivityLog extends Model
         'updated_at' => 'datetime',
     ];
 
+    // ======================================================================
+    // MODEL RELATIONSHIPS
+    // ======================================================================
+
+    /**
+     * User who performed the action
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

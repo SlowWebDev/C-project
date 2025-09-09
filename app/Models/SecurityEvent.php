@@ -7,10 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Jenssegers\Agent\Agent;
 
+/**
+ * SecurityEvent Model - Security Audit Log
+ * 
+ * Records security events like logins, logouts, failed attempts, etc.
+ * 
+ * @author SlowWebDev
+ */
 class SecurityEvent extends Model
 {
     use HasFactory;
 
+    /**
+     * Fields that can be mass assigned
+     */
     protected $fillable = [
         'user_id',
         'event_type',
@@ -24,6 +34,9 @@ class SecurityEvent extends Model
         'occurred_at',
     ];
 
+    /**
+     * Cast attributes to proper types
+     */
     protected $casts = [
         'device_info' => 'array',
         'metadata' => 'array',
@@ -32,6 +45,9 @@ class SecurityEvent extends Model
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * Available security event types
+     */
     const EVENT_TYPES = [
         'login' => 'Login Attempt',
         'logout' => 'Logout',
@@ -44,10 +60,20 @@ class SecurityEvent extends Model
         'suspicious_activity' => 'Suspicious Activity',
     ];
 
+    /**
+     * Event status constants
+     */
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILED = 'failed';
     const STATUS_BLOCKED = 'blocked';
 
+    // ======================================================================
+    // MODEL RELATIONSHIPS
+    // ======================================================================
+
+    /**
+     * User associated with this security event
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

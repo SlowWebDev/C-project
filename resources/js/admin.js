@@ -1,7 +1,9 @@
 /**
- * Admin Panel JavaScript 
- * @author SlowWebDev
-
+ * Admin Panel JavaScript - UI Interactions
+ * 
+ * Handles dropdowns, previews, editors, uploads, and admin UX.
+ * 
+ * Author: SlowWebDev
  */
 
 import Toastify from 'toastify-js';

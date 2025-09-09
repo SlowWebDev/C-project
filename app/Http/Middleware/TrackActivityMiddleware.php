@@ -8,8 +8,18 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Activity Tracking Middleware - Admin Action Logger
+ * 
+ * Tracks admin activities and updates device session activity
+ * 
+ * @author SlowWebDev
+ */
 class TrackActivityMiddleware
 {
+    /**
+     * Track user activity and log admin actions
+     */
     public function handle(Request $request, Closure $next): Response
     {
         // Update device session activity

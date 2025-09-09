@@ -4,6 +4,8 @@
 
 /* ==========================================
    BASE STYLES
+   Global base styles and Tailwind layer setup for the frontend.
+   Author: SlowWebDev
    ========================================== */
 @layer base {
     html {
@@ -55,6 +57,8 @@
 
 /* ==========================================
    COMPONENTS 
+   Reusable component classes for navigation, drawer, footer, etc.
+   Author: SlowWebDev
    ========================================== */
 @layer components {
     /* Layout */
@@ -277,6 +281,8 @@
 
 /* ==========================================
    RESPONSIVE MEDIA 
+   Responsive fine-tuning for hero and sliders.
+   Author: SlowWebDev
    ========================================== */
 
 /* Medium Devices - Tablets */

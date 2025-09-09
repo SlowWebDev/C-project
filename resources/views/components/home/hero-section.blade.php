@@ -1,3 +1,12 @@
+{{--
+    Home Hero Section Component - Main Landing Carousel
+    
+    Full-screen image slider with company slogan, brochure download,
+    and responsive design for all device sizes.
+    
+    Author: SlowWebDev
+--}}
+
 <section class="relative h-screen overflow-hidden">
     <div class="swiper hero-swiper h-full">
         <div class="swiper-wrapper">
@@ -30,9 +39,9 @@ $adminSlides = [
                      decoding="async">
             @endif
 
-            <!-- Hero Container -->
+            {{-- Hero Content Container --}}
             <div class="absolute inset-x-0 top-[30%] mx-auto z-20 flex flex-col items-center justify-center space-y-8 px-4">
-                <!-- Logo/Slogan -->
+                {{-- Company Logo/Slogan --}}
                 <img src="{{ asset('assets/images/home/hero/slogan.png') }}" 
                      alt="Slogan"
                      width="600" height="200"
@@ -40,7 +49,7 @@ $adminSlides = [
                      decoding="async"
                      class="h-[15vh] sm:h-[16vh] lg:h-[18vh] object-contain mx-auto transition-all duration-500">
 
-                <!-- Download Button -->
+                {{-- Brochure Download Button --}}
                 @if(isset($settings['hero_pdf']) && $settings['hero_pdf'])
                     <a href="{{ asset('storage/' . $settings['hero_pdf']) }}" 
                        class="btn-hero" 
@@ -60,7 +69,7 @@ $adminSlides = [
 
         </div>
         
-        <!--  Pagination  -->
+        {{-- Slider Navigation Dots --}}
         <div class="swiper-pagination [&>span.swiper-pagination-bullet-active]:bg-[#ff6b00]">
            
 </section>

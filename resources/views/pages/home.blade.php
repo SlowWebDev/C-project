@@ -1,3 +1,12 @@
+{{--
+    Home Page - Main Landing Page
+    
+    Displays hero section, company benefits, CEO message, 
+    featured projects, partners, and latest media.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('layouts.app')
 
 @section('title', 'Home - Slow')

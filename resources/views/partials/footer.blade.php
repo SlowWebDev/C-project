@@ -1,12 +1,21 @@
+{{--
+    Site Footer - Main Footer Section
+    
+    Displays company information, navigation links, social media,
+    and contact information with background image overlay.
+    
+    Author: SlowWebDev
+--}}
+
 <footer class="relative bg-center bg-cover bg-no-repeat min-h-[400px]" style="background-image: url('{{ asset('assets/images/footer.jpg') }}');">
-            <!-- Overlay -->
+            {{-- Background Overlay --}}
     <div class="absolute inset-0 bg-white/30"></div>
 
-    <!-- Container -->
+    {{-- Footer Content Container --}}
     <div class="relative z-10 max-w-6xl mx-auto px-4 py-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 items-start">
             
-            <!-- Logo + Description -->
+            {{-- Company Logo and Description --}}
             <div class="lg:col-span-4">
         <img src="{{ \App\Models\Setting::getLogo('logo-footer') }}" class="site-logo" data-type="logo-footer" 
      alt="company Logo" 
@@ -22,7 +31,7 @@
                 </p>
             </div>
 
-            <!-- Quick Links -->
+            {{-- Quick Navigation Links --}}
             <div class="footer-section">
                 <h3 class="footer-heading">QUICK LINKS</h3>
                 <ul class="footer-links">
@@ -32,7 +41,7 @@
                 </ul>
             </div>
 
-            <!-- Developments -->
+            {{-- Development Categories --}}
             <div class="footer-section">
                 <h3 class="footer-heading">DEVELOPMENTS</h3>
                 <ul class="footer-links">
@@ -41,7 +50,7 @@
                 </ul>
             </div>
 
-<!-- Scroll Up Button -->
+{{-- Scroll to Top Button --}}
 <div class="lg:col-span-2 flex justify-start lg:justify-end">
     <button 
         onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
@@ -53,7 +62,7 @@
 
         </div>
 
-        <!-- Social Media -->
+        {{-- Social Media Links --}}
         <div class="footer-social">
             @if($facebookUrl = \App\Models\Setting::get('social_facebook'))
                 <a href="{{ $facebookUrl }}" target="_blank" rel="noopener" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
@@ -72,7 +81,7 @@
             @endif
         </div>
 
-        <!-- Copyright -->
+        {{-- Copyright Notice --}}
         <div class="text-center text-gray-600 border-t border-gray-300 pt-4 mt-8">
             {{ \App\Models\Setting::get('copyright_text', 'All Copyrights for ©1SLOW') }}
         </div>

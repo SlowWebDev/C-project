@@ -9,22 +9,29 @@ use App\Models\Media;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
+/**
+ * Admin Dashboard Controller
+ * 
+ * Main admin panel dashboard with statistics and recent activity
+ * 
+ * @author SlowWebDev
+ */
 class DashboardController extends Controller
 {
     /**
-     * Display the dashboard page.
+     * Display admin dashboard with statistics and recent activity
      */
     public function index()
     {
-        // Get counts for dashboard stats
-        $projectsCount = \App\Models\Project::where('status', 'published')->count();
-        $mediaCount = \App\Models\Media::count();
-        $jobsCount = \App\Models\Job::where('is_active', true)->count();
-        $applicationsCount = \App\Models\JobApplication::where('status', 'pending')->count();
+        // Calculate main statistics for dashboard cards
+        $projectsCount = Project::where('status', 'published')->count();
+        $mediaCount = Media::count();
+        $jobsCount = Job::where('is_active', true)->count();
+        $applicationsCount = JobApplication::where('status', 'pending')->count();
         
-        // Get latest records for dashboard tables
-        $recentProjects = \App\Models\Project::latest()->take(5)->get();
-        $recentApplications = \App\Models\JobApplication::with('job')
+        // Get recent activity for dashboard tables
+        $recentProjects = Project::latest()->take(5)->get();
+        $recentApplications = JobApplication::with('job')
             ->latest()
             ->take(5)
             ->get();

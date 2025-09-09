@@ -1,3 +1,12 @@
+{{--
+    Admin Authentication Layout
+    
+    Clean minimal layout for admin login, 2FA setup/verify pages.
+    Focuses on security and user experience.
+    
+    Author: SlowWebDev
+--}}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

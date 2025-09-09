@@ -7,10 +7,23 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * UnifiedSeo Model - SEO Management System
+ * 
+ * Manages SEO settings for all site pages with sitemap generation
+ * 
+ * @author SlowWebDev
+ */
 class UnifiedSeo extends Model
 {
+    /**
+     * Custom table name
+     */
     protected $table = 'unified_seo_settings';
     
+    /**
+     * All SEO fields for all pages (mass assignable)
+     */
     protected $fillable = [
         // Home Page
         'home_title', 'home_meta_title', 'home_meta_description', 'home_meta_keywords',
@@ -46,6 +59,9 @@ class UnifiedSeo extends Model
         'site_name', 'default_og_image'
     ];
 
+    /**
+     * Cast attributes to proper types
+     */
     protected $casts = [
         'home_active' => 'boolean', 'home_indexable' => 'boolean', 'home_priority' => 'integer',
         'about_active' => 'boolean', 'about_indexable' => 'boolean', 'about_priority' => 'integer',

@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Admin Pages Controller - Static Pages Settings
+ * 
+ * Manage content and media for Home, About, and Contact pages
+ * 
+ * @author SlowWebDev
+ */
 class PagesController extends Controller
 {
 

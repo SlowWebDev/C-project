@@ -7,10 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * JobApplication Model - Career Applications
+ * 
+ * Handles job applications with CV file management
+ * 
+ * @author SlowWebDev
+ */
 class JobApplication extends Model
 {
     use HasFactory, SoftDeletes;
 
+    /**
+     * Fields that can be mass assigned
+     */
     protected $fillable = [
         'job_id',
         'first_name',
@@ -21,10 +31,20 @@ class JobApplication extends Model
         'status'
     ];
 
+    /**
+     * Cast attributes to proper types
+     */
     protected $casts = [
         'created_at' => 'datetime'
     ];
 
+    // ======================================================================
+    // MODEL RELATIONSHIPS
+    // ======================================================================
+
+    /**
+     * Associated job posting
+     */
     public function job(): BelongsTo
     {
         return $this->belongsTo(Job::class);

@@ -12,8 +12,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Admin Security Controller - Account Security Center
+ * 
+ * Handles password/email updates, 2FA actions, security logs, and device control
+ * 
+ * @author SlowWebDev
+ */
 class SecurityController extends Controller
 {
+    /**
+     * Get current user with related security relations
+     */
     private function getCurrentUser()
     {
         return auth()->user()->load(['securityEvents', 'deviceSessions', 'activityLogs']);

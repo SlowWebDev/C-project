@@ -10,6 +10,13 @@ use PragmaRX\Google2FA\Google2FA;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 
+/**
+ * Admin TwoFactor Controller - TOTP-based 2FA
+ * 
+ * Setup and verification flows for two-factor authentication
+ * 
+ * @author SlowWebDev
+ */
 class TwoFactorController extends Controller
 {
     

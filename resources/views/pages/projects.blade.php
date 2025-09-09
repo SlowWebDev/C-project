@@ -1,3 +1,12 @@
+{{--
+    Projects Page - Portfolio Showcase
+    
+    Displays project banner and grid of all published projects 
+    with category filtering and detailed views.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('layouts.app')
 
 @section('title', 'Our Projects ')

@@ -1,3 +1,12 @@
+{{--
+    Admin Contacts Index - Customer Messages Dashboard
+    
+    Displays and manages all customer contact forms with status tracking,
+    bulk operations, and direct email integration.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.admin')
 
 @section('title', 'Contact Messages')

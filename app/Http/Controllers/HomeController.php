@@ -8,13 +8,27 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
+/**
+ * HomeController - Main Landing Page
+ * 
+ * Handles home page display with projects, media, and settings
+ * 
+ * @author SlowWebDev
+ */
 class HomeController extends Controller 
 {
+    /**
+     * Display the home page
+     */
     public function index(): View
     {
+        // Get latest published projects for home showcase
         $projects = Project::where('status', 'published')->latest()->take(6)->get();
+        
+        // Get latest media items for news section
         $mediaItems = Media::where('status', 'published')->latest()->take(3)->get();
 
+        // Load all home page settings from database
         $homeSettings = [
             'hero_button_text' => Setting::get('home_hero_button_text'),
             'hero_pdf' => Setting::get('home_hero_pdf'),

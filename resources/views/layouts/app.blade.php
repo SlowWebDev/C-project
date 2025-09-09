@@ -1,3 +1,12 @@
+{{--
+    Main Application Layout - Frontend Structure
+    
+    Provides the complete frontend layout with dynamic SEO meta tags,
+    navigation, footer, and optimized loading for all public pages.
+    
+    Author: SlowWebDev
+--}}
+
 @php
 $currentRoute = request()->route()->getName();
 $pageKey = match($currentRoute) {
@@ -43,7 +52,7 @@ $seoData = $pageKey ? $seoSettings->getPageData($pageKey) : null;
         <meta name="robots" content="index, follow">
     @endif
     
-    <!-- Favicon -->
+    {{-- Favicon & Touch Icons --}}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
@@ -51,7 +60,7 @@ $seoData = $pageKey ? $seoSettings->getPageData($pageKey) : null;
     <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     
     @if($seoData && $seoData['active'] && ($seoData['og_title'] || $seoData['meta_title']))
-        <!-- Open Graph / Facebook -->
+        {{-- Open Graph / Social Media Meta Tags --}}
         <meta property="og:type" content="website">
         <meta property="og:url" content="{{ request()->url() }}">
         <meta property="og:title" content="{{ $seoData['og_title'] ?: $seoData['meta_title'] ?: $seoData['title'] }}">
@@ -75,34 +84,35 @@ $seoData = $pageKey ? $seoSettings->getPageData($pageKey) : null;
         
     @endif
     
-    <!-- Critical Resource Hints -->
+    {{-- Performance Optimization - Resource Hints --}}
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
-    <!-- Optimized Font Loading -->
+    {{-- Optimized Font Loading - Inter Font Family --}}
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"></noscript>
     
-    <!-- Sitemap -->
+    {{-- SEO Enhancement --}}
     <link rel="sitemap" type="application/xml" href="{{ url('/sitemap.xml') }}">
     
-        
-    <!-- Custom CSS and JS -->
+    {{-- Compiled Assets - Vite Build --}}
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/main.js'])
     
     @stack('styles')
 </head>
 <body class="font-sans antialiased" style="font-display: swap;">    
-    <!-- Navigation -->
+    {{-- Site Navigation --}}
     @include('partials.navigation')
     
-    <!-- Main Content -->
+    {{-- Page Content Area --}}
     <main>
         @yield('content')
     </main>
-        @include('partials.footer')
+    
+    {{-- Site Footer --}}
+    @include('partials.footer')
 
     @stack('scripts')
 </body>

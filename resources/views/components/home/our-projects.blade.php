@@ -1,15 +1,24 @@
+{{--
+    Home Our Projects Component - Featured Projects Slider
+    
+    Displays featured projects in a responsive carousel with 
+    project details and navigation to individual project pages.
+    
+    Author: SlowWebDev
+--}}
+
 @props(['projects'])
 
 <section class="py-24">
-    <!-- Title -->
+    {{-- Section Title --}}
     <div class="container mx-auto px-4 mb-16">
         <h2 class="section-title" data-aos="fade-up" data-aos-duration="800">
             Our Projects
         </h2>
     </div>
     
-    <!-- Swiper -->
-    <div class="swiper projects-swiper overflow-visible max-w-[1400px] mx-auto px-4" 
+    {{-- Projects Carousel Slider --}}
+    <div class="swiper projects-swiper overflow-visible max-w-[1400px] mx-auto px-4"
          data-aos="fade-up" 
          data-aos-delay="100" 
          data-aos-duration="1000"

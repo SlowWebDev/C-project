@@ -1,3 +1,12 @@
+{{--
+    Admin SEO Manager - Unified SEO Configuration
+    
+    Comprehensive SEO management interface for all pages with meta tags,
+    social media optimization, and search engine visibility controls.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.admin')
 
 @section('title', 'SEO Manager')
@@ -5,7 +14,7 @@
 
 @section('content')
 <div class="space-y-8">
-    <!-- Page Header -->
+    {{-- SEO Manager Header --}}
     <div class="admin-page-header">
         <div>
             <h1 class="admin-page-title">SEO Manager</h1>
@@ -41,7 +50,7 @@
         </div>
     @endif
 
-    <!-- Stats Overview -->
+    {{-- SEO Statistics Overview --}}
     <div class="admin-stats-grid">
     <div class="admin-stat-card">
         <div class="admin-stat-icon admin-stat-icon-blue">
@@ -89,12 +98,12 @@
     </div>
 </div>
 
-    <!-- SEO Form -->
+    {{-- SEO Configuration Form --}}
     <div class="admin-card">
         <form action="{{ route('admin.seo.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
-            <!-- Page Tabs -->
+            {{-- Page Selection Tabs --}}
             <div class="border-b border-gray-700">
                 <div class="flex flex-wrap gap-1 -mb-px">
                     @foreach($pages as $pageKey => $pageName)
@@ -125,7 +134,7 @@
                 </div>
             </div>
 
-            <!-- Page Settings -->
+            {{-- Individual Page SEO Settings --}}
             @foreach($pages as $pageKey => $pageName)
                 <div class="page-content {{ $loop->first ? '' : 'hidden' }} py-6" id="page-{{ $pageKey }}">
                     <div class="flex items-center justify-between mb-6">

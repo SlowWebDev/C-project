@@ -1,3 +1,12 @@
+{{--
+    Admin Security Center Overview
+    
+    Main security dashboard displaying statistics, quick actions,
+    and account security settings (password/email updates).
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.admin')
 
 @section('title', 'Security Center')

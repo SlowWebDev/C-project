@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Secure Asset Access Middleware - File Security
+ * 
+ * Protects sensitive files and validates file access permissions
+ * 
+ * @author SlowWebDev
+ */
 class SecureAssetAccess
 {
     /**

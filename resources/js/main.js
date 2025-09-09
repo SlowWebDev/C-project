@@ -1,5 +1,10 @@
 /**
- * Main JavaScript file for handling front-end functionality
+ * Main JavaScript - Frontend Utilities
+ * 
+ * Handles form submission UX (prevent duplicates, success state),
+ * localStorage keys, and progressive enhancement. 
+ * 
+ * Author: SlowWebDev
  */
 
 /* ===========================

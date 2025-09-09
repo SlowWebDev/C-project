@@ -1,3 +1,12 @@
+{{--
+    Admin Careers Index - Job Postings & Applications Management
+    
+    Dual-purpose page managing both job positions and applications.
+    Includes filtering, status updates, and application downloads.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.admin')
 
 @section('title', 'Job Position Management')

@@ -1,3 +1,12 @@
+{{--
+    Admin Home Page Management
+    
+    Comprehensive homepage content editor including hero slider,
+    PDF downloads, statistics, and CEO message sections.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.admin')
 
 @section('title', 'Home Page Management')

@@ -5,15 +5,36 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API Routes - Backend API Endpoints
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| API routes for external integrations and AJAX requests.
+| All routes here are prefixed with '/api' and use 'api' middleware group.
+| 
+| @author SlowWebDev
 |
 */
 
+/*
+|--------------------------------------------------------------------------
+| Authenticated API Routes
+|--------------------------------------------------------------------------
+|
+| Routes requiring Sanctum token authentication
+|
+*/
+
+// User profile endpoint for authenticated users
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+/*
+|--------------------------------------------------------------------------
+| Public API Routes
+|--------------------------------------------------------------------------
+|
+| Future public endpoints can be added here without authentication
+| Example: public project listings, contact forms, etc.
+|
+*/

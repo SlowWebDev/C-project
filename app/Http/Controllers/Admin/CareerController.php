@@ -8,8 +8,18 @@ use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Admin Career Controller - Jobs & Applications
+ * 
+ * Manage job postings, applications, and statuses
+ * 
+ * @author SlowWebDev
+ */
 class CareerController extends Controller
 {
+    /**
+     * List jobs and filterable applications
+     */
     public function index(Request $request)
     {
         $jobs = Job::withCount('applications')->latest()->paginate(10);

@@ -1,3 +1,12 @@
+{{--
+    Admin 2FA Setup Page
+    
+    Guides users through two-factor authentication setup with QR code scanning
+    and manual secret key backup. Essential for admin account security.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.auth')
 
 @section('title', 'Setup Two-Factor Authentication')

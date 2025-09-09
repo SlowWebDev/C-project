@@ -1,3 +1,12 @@
+{{--
+    Admin Projects Index - Projects Management Dashboard
+    
+    Displays all projects in a data table with CRUD operations,
+    filtering by category/status, and pagination.
+    
+    Author: SlowWebDev
+--}}
+
 @extends('admin.layouts.admin')
 
 @section('title', 'Projects Management')
@@ -16,7 +25,7 @@
     </a>
 </div>
 
-<!-- Projects Table -->
+{{-- Projects Data Table --}}
 <div class="admin-card">
     <div class="admin-table-container">
         <table class="admin-table">
