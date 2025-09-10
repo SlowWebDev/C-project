@@ -66,16 +66,87 @@
                         </td>
                         <td class="admin-table-cell">
                             <div class="max-w-xs">
-                                <p class="admin-text-muted text-sm leading-5">{{ Str::limit($contact->message, 80) }}</p>
-                                @if(strlen($contact->message) > 80)
-                                    <button onclick="toggleMessage({{ $contact->id }})" class="text-blue-500 hover:text-blue-700 text-xs mt-1">
-                                        <span id="toggle-text-{{ $contact->id }}">Show more</span>
-                                    </button>
-                                    <div id="full-message-{{ $contact->id }}" class="hidden mt-2 p-2 bg-gray-50 rounded text-sm">
-                                        {{ $contact->message }}
+                                @if(strlen($contact->message) > 15)
+                                    <div>
+                                        <p class="text-gray-300 text-sm mb-2">{{ substr($contact->message, 0, 15) }}...</p>
+                                        <button onclick="showMessage({{ $contact->id }})" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded transition-colors">
+                                            <i class="fas fa-eye mr-1"></i>
+                                            Show more
+                                        </button>
                                     </div>
+                                @else
+                                    <p class="text-gray-300 text-sm break-words">{{ $contact->message }}</p>
                                 @endif
                             </div>
+                            
+                            @if(strlen($contact->message) > 15)
+                            <!-- Enhanced Modal - Fixed positioning to avoid sidebar -->
+                            <div id="modal_{{ $contact->id }}" class="fixed inset-0 z-40 hidden lg:right-64" onclick="hideMessage({{ $contact->id }})">
+                                <!-- Backdrop -->
+                                <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity"></div>
+                                
+                                <!-- Modal Container -->
+                                <div class="relative h-full flex items-center justify-center p-4">
+                                    <div class="bg-gray-800 rounded-xl shadow-2xl border border-gray-600 w-full max-w-lg max-h-[85vh] overflow-hidden" onclick="event.stopPropagation()">
+                                        <!-- Header -->
+                                        <div class="bg-gray-700 px-4 py-3 border-b border-gray-600">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-2">
+                                                    <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                                                        <i class="fas fa-envelope text-white text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h3 class="text-base font-semibold text-white">{{ $contact->first_name }} {{ $contact->last_name }}</h3>
+                                                        <p class="text-xs text-gray-300">{{ $contact->email }}</p>
+                                                    </div>
+                                                </div>
+                                                <button onclick="hideMessage({{ $contact->id }})" class="text-gray-400 hover:text-white hover:bg-gray-600 rounded p-1 transition-colors">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Message Content -->
+                                        <div class="p-4 overflow-y-auto" style="max-height: 50vh;">
+                                            <!-- Contact Info in one line -->
+                                            <div class="flex flex-wrap items-center gap-4 mb-4 text-sm">
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-900 text-blue-200">
+                                                    {{ $contact->type === 'project_inquiry' ? 'Project Inquiry' : 'General Contact' }}
+                                                </span>
+                                                @if($contact->project)
+                                                    <span class="text-blue-400">{{ $contact->project->title }}</span>
+                                                @endif
+                                                @if($contact->phone)
+                                                    <span class="text-gray-300">{{ $contact->phone }}</span>
+                                                @endif
+                                            </div>
+                                            
+                                            <!-- Message -->
+                                            <div class="bg-gray-700 rounded-lg p-3 border-l-3 border-blue-500">
+                                                <p class="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap break-words">{{ $contact->message }}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Footer -->
+                                        <div class="bg-gray-700 px-4 py-3 border-t border-gray-600 flex justify-between items-center">
+                                            <div class="text-xs text-gray-400">
+                                                <i class="far fa-clock mr-1"></i>
+                                                {{ $contact->created_at->diffForHumans() }}
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button onclick="hideMessage({{ $contact->id }})" class="bg-gray-600 hover:bg-gray-500 text-white px-3 py-1 rounded text-sm transition-colors">
+                                                    Close
+                                                </button>
+                                                <a href="mailto:{{ $contact->email }}?subject=Re: Your {{ $contact->type === 'project_inquiry' ? 'Project Inquiry' : 'Contact' }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors inline-flex items-center">
+                                                    <i class="fas fa-reply mr-1 text-xs"></i>
+                                                    Reply
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         </td>
                         <td class="admin-table-cell">
                             @if($contact->status === 'new')

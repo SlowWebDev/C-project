@@ -697,6 +697,22 @@ class MessageUtils {
             }
         }
     }
+    
+    static showMessage(contactId) {
+        const modal = document.getElementById(`modal_${contactId}`);
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    
+    static hideMessage(contactId) {
+        const modal = document.getElementById(`modal_${contactId}`);
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    }
 }
 
 /* ===== FOOTER SETTINGS MANAGER ===== */
@@ -731,6 +747,8 @@ window.AdminPanel = {
 
 // Global functions for backward compatibility
 window.toggleMessage = MessageUtils.toggleMessage;
+window.showMessage = MessageUtils.showMessage;
+window.hideMessage = MessageUtils.hideMessage;
 window.toggleFooterSettings = FooterManager.toggleSettings;
 
 // ===== UNIVERSAL FILE HANDLERS =====

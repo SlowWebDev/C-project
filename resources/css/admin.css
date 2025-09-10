@@ -14,10 +14,14 @@
 /* ===== LAYOUT ===== */
 .admin-main-content {
     @apply flex-1 mr-64 min-h-screen flex flex-col;
+    max-width: calc(100vw - 16rem); 
 }
 
 .admin-content-area {
     @apply flex-1 p-6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 /* ===== PAGE HEADERS ===== */
