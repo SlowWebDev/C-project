@@ -50,10 +50,6 @@
                     <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mr-3">
                         <i class="fas fa-shield-alt text-green-400"></i>
                     </div>
-                    <div>
-                        <div class="text-lg font-bold text-white">{{ $stats['trusted_devices'] }}</div>
-                        <div class="text-xs admin-text-muted">Trusted Devices</div>
-                    </div>
                 </div>
                 
                 <div class="flex items-center p-4 bg-gray-700/30 rounded-lg">
